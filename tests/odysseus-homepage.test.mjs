@@ -289,11 +289,18 @@ test("the middle acts have distinct reduced-motion-safe choreography", () => {
 
   assert.match(page, /useScroll\(\{\s*target: memoryRef,\s*offset: \[["']start end["'], ["']end start["']\],?\s*\}\)/);
   assert.match(page, /useTransform\(memoryScrollYProgress, \[0, 1\], \[["']-4%["'], ["']4%["']\]\)/);
+  assert.match(page, /function useSectionReveal\(progress: MotionValue<number>\)/);
+  assert.match(page, /reveal\(progress\.get\(\)\)/, "section reveal must recover a jump that occurs before subscription");
+  assert.match(page, /return progress\.on\(["']change["'], reveal\)/, "section reveal must follow direct scroll changes");
+  assert.match(page, /const memoryActive = useSectionReveal\(memoryScrollYProgress\)/);
+  assert.match(page, /const recognitionActive = useSectionReveal\(recognitionScrollYProgress\)/);
+  assert.doesNotMatch(`${memory}\n${recognition}`, /whileInView=/, "memory and recognition must not depend on per-element observers");
   assert.match(memory, /className=["']memory-plate["']/);
   assert.match(memory, /style=\{\{ y: memoryY, scale: 1\.08 \}\}/);
   assert.equal(memory.match(/\bmemory-line\b/g)?.length, 2, "the memory heading and introduction must reveal line by line");
   assert.equal(memory.match(/<motion\.article\b/g)?.length, 2, "both named shades must rise");
   assert.equal(memory.match(/\bmemory-voice__rule\b/g)?.length, 2, "both shade rules must draw");
+  assert.equal(memory.match(/animate=\{memoryActive \?/g)?.length, 6, "every memory reveal must share the robust section trigger");
 
   assert.match(page, /useScroll\(\{\s*target: recognitionRef,\s*offset: \[["']start end["'], ["']end start["']\],?\s*\}\)/);
   assert.match(recognition, /className=["']recognition-weave["']/);
@@ -301,6 +308,8 @@ test("the middle acts have distinct reduced-motion-safe choreography", () => {
   assert.match(recognition, /clipPath: ["']inset\(0 0 0 100%\)["']/);
   assert.equal(recognition.match(/<motion\.article\b/g)?.length, 3, "all three signs must stagger in");
   assert.equal(recognition.match(/<RecognitionIndex\b/g)?.length, 3, "all three signs must count their index");
+  assert.equal(recognition.match(/animate=\{recognitionActive \?/g)?.length, 4, "the plate and signs must share the robust section trigger");
+  assert.doesNotMatch(recognition, /onViewportEnter=/, "recognition state must not depend on the missed observer callback");
   for (const value of [1, 2, 3]) assert.match(recognition, new RegExp(`<RecognitionIndex value=\\{${value}\\}`));
 
   const tickerCopy = "Troy / The cave / Almost home / Six taken / One hull / One survivor / Ithaca";

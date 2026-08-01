@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
-import type { MotionStyle } from "motion/react";
+import type { MotionStyle, MotionValue } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { CopyCommand } from "@/components/copy-command";
@@ -69,12 +69,26 @@ function StatNumber({
   );
 }
 
+function useSectionReveal(progress: MotionValue<number>) {
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const reveal = (latest: number) => {
+      if (latest > 0.15 && latest < 0.85) setActive(true);
+    };
+
+    reveal(progress.get());
+    return progress.on("change", reveal);
+  }, [progress]);
+
+  return active;
+}
+
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const memoryRef = useRef<HTMLElement>(null);
   const recognitionRef = useRef<HTMLElement>(null);
   const statsRef = useRef<HTMLUListElement>(null);
-  const [recognitionActive, setRecognitionActive] = useState(false);
   const reducedMotion = useReducedMotion();
   const statsInView = useInView(statsRef, { once: true, amount: 0.6 });
   const { scrollYProgress } = useScroll({
@@ -89,6 +103,8 @@ export default function Home() {
     target: recognitionRef,
     offset: ["start end", "end start"],
   });
+  const memoryActive = useSectionReveal(memoryScrollYProgress);
+  const recognitionActive = useSectionReveal(recognitionScrollYProgress);
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.78], [1, 0]);
   const memoryY = useTransform(memoryScrollYProgress, [0, 1], ["-4%", "4%"]);
@@ -254,11 +270,11 @@ export default function Home() {
               </motion.div>
             </div>
             <div className="px-4 py-16 sm:px-10 lg:px-16 lg:py-24">
-              <motion.h2 id="memory-title" className="memory-line font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl" initial={{ opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} whileInView={{ opacity: 1, y: 0, clipPath: "inset(0)" }} viewport={revealViewport} transition={{ duration: 0.56 }}>The dead speak</motion.h2>
-              <motion.p className="memory-line mt-7 text-lg leading-8 text-[#D8CCB4]/70" initial={{ opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} whileInView={{ opacity: 1, y: 0, clipPath: "inset(0)" }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }}>The underworld belongs to Odysseus’s reckoning. The war’s famous kings enter only as shadows inside his return.</motion.p>
+              <motion.h2 id="memory-title" className="memory-line font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl" initial={{ opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} animate={memoryActive ? { opacity: 1, y: 0, clipPath: "inset(0)" } : { opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} transition={{ duration: 0.56 }}>The dead speak</motion.h2>
+              <motion.p className="memory-line mt-7 text-lg leading-8 text-[#D8CCB4]/70" initial={{ opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} animate={memoryActive ? { opacity: 1, y: 0, clipPath: "inset(0)" } : { opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} transition={{ duration: 0.56, delay: 0.07 }}>The underworld belongs to Odysseus’s reckoning. The war’s famous kings enter only as shadows inside his return.</motion.p>
               <div className="mt-10 space-y-8">
-                <motion.article className="memory-voice relative border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }}><motion.span aria-hidden="true" className="draw-line memory-voice__rule" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }} /><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Achilles rejects dead glory</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">His answer strips victory of its polish: life without rank would be worth more than rule among shades.</p></motion.article>
-                <motion.article className="memory-voice relative border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }}><motion.span aria-hidden="true" className="draw-line memory-voice__rule" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }} /><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Agamemnon warns of the door</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">A king can reach home and still be murdered there. Odysseus learns to return concealed.</p></motion.article>
+                <motion.article className="memory-voice relative border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} animate={memoryActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }} transition={{ duration: 0.56, delay: 0.14 }}><motion.span aria-hidden="true" className="draw-line memory-voice__rule" initial={{ scaleX: 0 }} animate={memoryActive ? { scaleX: 1 } : { scaleX: 0 }} transition={{ duration: 0.56, delay: 0.14 }} /><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Achilles rejects dead glory</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">His answer strips victory of its polish: life without rank would be worth more than rule among shades.</p></motion.article>
+                <motion.article className="memory-voice relative border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} animate={memoryActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }} transition={{ duration: 0.56, delay: 0.21 }}><motion.span aria-hidden="true" className="draw-line memory-voice__rule" initial={{ scaleX: 0 }} animate={memoryActive ? { scaleX: 1 } : { scaleX: 0 }} transition={{ duration: 0.56, delay: 0.21 }} /><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Agamemnon warns of the door</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">A king can reach home and still be murdered there. Odysseus learns to return concealed.</p></motion.article>
               </div>
             </div>
           </div>
@@ -275,9 +291,7 @@ export default function Home() {
               <motion.div
                 className="rv-clip recognition-plate relative min-h-[30rem] overflow-hidden border border-[#D8CCB4]/10"
                 initial={{ clipPath: "inset(0 0 0 100%)" }}
-                whileInView={{ clipPath: "inset(0)" }}
-                onViewportEnter={() => setRecognitionActive(true)}
-                viewport={revealViewport}
+                animate={recognitionActive ? { clipPath: "inset(0)" } : { clipPath: "inset(0 0 0 100%)" }}
                 transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               >
                 <Image
@@ -290,9 +304,9 @@ export default function Home() {
               </motion.div>
             </div>
             <div className="rv-stagger mt-12 grid gap-8 md:grid-cols-3">
-              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56 }}><RecognitionIndex value={1} active={recognitionActive} delay={0} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></motion.article>
-              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }}><RecognitionIndex value={2} active={recognitionActive} delay={0.07} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></motion.article>
-              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }}><RecognitionIndex value={3} active={recognitionActive} delay={0.14} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></motion.article>
+              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} animate={recognitionActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }} transition={{ duration: 0.56 }}><RecognitionIndex value={1} active={recognitionActive} delay={0} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></motion.article>
+              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} animate={recognitionActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }} transition={{ duration: 0.56, delay: 0.07 }}><RecognitionIndex value={2} active={recognitionActive} delay={0.07} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></motion.article>
+              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={{ opacity: 0, y: 24 }} animate={recognitionActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }} transition={{ duration: 0.56, delay: 0.14 }}><RecognitionIndex value={3} active={recognitionActive} delay={0.14} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></motion.article>
             </div>
           </div>
         </section>
