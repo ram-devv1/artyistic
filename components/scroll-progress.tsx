@@ -11,7 +11,7 @@ export function ScrollProgress() {
   return (
     <motion.div
       aria-hidden="true"
-      className="scroll-progress pointer-events-none fixed inset-x-0 top-0 z-40 h-px origin-left bg-[var(--brick)] shadow-[0_0_8px_var(--glint)]"
+      className="scroll-progress pointer-events-none fixed inset-x-0 top-0 z-20 h-px origin-left bg-[var(--brick)] shadow-[0_0_8px_var(--glint)]"
       style={{ scaleX: reducedMotion ? finalScaleX : scaleX }}
     />
   );

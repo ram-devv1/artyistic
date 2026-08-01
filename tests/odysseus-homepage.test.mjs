@@ -151,6 +151,10 @@ test("the layout wires the reduced-motion-safe motion foundation", async () => {
   assert.match(scrollProgress, /style=\{\{ scaleX: reducedMotion \? finalScaleX : scaleX \}\}/);
   assert.match(scrollProgress, /var\(--brick\)/);
   assert.match(scrollProgress, /var\(--glint\)/);
+  const headerLayer = page.match(/<header[^>]*className=["'][^"']*\bz-(\d+)\b/)?.[1];
+  const progressLayer = scrollProgress.match(/className=["'][^"']*\bz-(\d+)\b/)?.[1];
+  assert.ok(headerLayer && progressLayer, "header and scroll progress must declare z-index layers");
+  assert.ok(Number(progressLayer) < Number(headerLayer), `scroll progress z-${progressLayer} must remain below header controls z-${headerLayer}`);
   assert.doesNotMatch(grain, /use client/);
   assert.match(grain, /feTurbulence/);
   assert.match(grain, /pointer-events-none/);
