@@ -4,6 +4,7 @@ import test from "node:test";
 
 const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
 test("the homepage source declares the complete Long Return contract", () => {
   assert.match(page, /The Long Return/);
@@ -58,4 +59,11 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.match(layout, /IBM_Plex_Sans/);
   assert.match(layout, /IBM_Plex_Mono/);
   assert.match(layout, /The Long Return/);
+});
+
+test("the visual system keeps its motion and input affordance contracts", () => {
+  assert.match(stylesheet, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
+  assert.match(stylesheet, /:focus-visible/);
+  assert.match(stylesheet, /\.voyage-line/);
+  assert.match(stylesheet, /\.bow-string/);
 });

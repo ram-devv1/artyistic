@@ -16,12 +16,12 @@ export function CopyCommand({ command }: { command: string }) {
     <button
       type="button"
       onClick={copy}
-      className="pixel-button inline-flex items-center gap-2 border border-[#9b5cff]/60 px-5 py-3 text-sm font-semibold text-[#c6a9ff]"
+      className="copy-button"
     >
-      <ClipboardDocumentIcon className="h-4 w-4" />
-      <span className="pixel-text">
-        <span className="pixel-text__sizer">Copy command</span>
-        <span className="pixel-text__label">{copied ? "Copied" : "Copy command"}</span>
+      <ClipboardDocumentIcon aria-hidden="true" className="h-4 w-4" />
+      <span className="copy-button__text" aria-live="polite" aria-atomic="true">
+        <span className="copy-button__sizer">Copy command</span>
+        <span>{copied ? "Copied" : "Copy command"}</span>
       </span>
     </button>
   );
