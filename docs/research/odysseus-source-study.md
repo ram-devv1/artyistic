@@ -137,6 +137,16 @@ These are visual references, not a blanket license. The Met records below identi
 
 For implementation, prefer an original illustration system derived from these compositional principles. If a real object photograph is needed, start with Met Open Access and preserve the object's credit/source record.
 
+## Implemented collage provenance
+
+The three v1.1 WebPs are authored editorial composites, not generated concept paintings. They were assembled with ImageMagick from six Met Open Access photographs whose collection records explicitly mark the images Public Domain. The complete machine-readable record, including accession numbers, source-image URLs, credit lines, source layers, and per-collage roles, lives at `public/assets/odysseus-sources.json`.
+
+| Final asset | Exact source objects | Use and boundary |
+|---|---|---|
+| `odysseus-hero.webp` | [Mycenaean octopus stirrup jar, 53.11.6](https://www.metmuseum.org/art/collection/search/254779); [Cypriot ship model, 74.51.1752](https://www.metmuseum.org/art/collection/search/241307) | The jar supplies era-near Bronze Age marine material; the later Cypriot ship remains a reception-layer silhouette. |
+| `odysseus-underworld.webp` | [Attic white-ground funerary lekythos, 06.1021.294](https://www.metmuseum.org/art/collection/search/247458) | A later Greek funerary object repeated as fading memory, not a literal image of Homer's underworld. |
+| `odysseus-homecoming.webp` | [Melian Odysseus/Penelope plaque, 30.11.9](https://www.metmuseum.org/art/collection/search/253053); [Attic Odysseus archer jug, 24.97.24](https://www.metmuseum.org/art/collection/search/251485); [Attic Athena-owl cup, 41.162.100](https://www.metmuseum.org/art/collection/search/254272) | Three later Greek reception objects assembled as a recognition sequence; none is claimed as Bronze Age documentation. |
+
 ## Universal/Nolan film layer — official material only
 
 Universal describes the film as a mythic action epic shot around the world with IMAX film technology. The verified [official trailer](https://www.youtube.com/watch?v=Mzw2ttJD2qQ) and [official movie page](https://www.universalpictures.com/movies/the-odyssey) are the only sources used here for film claims.

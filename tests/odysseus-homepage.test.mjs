@@ -155,3 +155,25 @@ test("the mobile layout keeps recognition art and primary navigation visible", (
 test("the release package exposes the production build", () => {
   assert.equal(packageJson.scripts.build, "next build");
 });
+
+test("the collage asset manifest preserves exact public-domain provenance", async () => {
+  const manifest = JSON.parse(
+    await readFile(new URL("../public/assets/odysseus-sources.json", import.meta.url), "utf8"),
+  );
+
+  assert.equal(manifest.license, "Creative Commons Zero (CC0)");
+  assert.equal(manifest.providerPolicy, "https://www.metmuseum.org/hubs/open-access");
+  assert.equal(manifest.assets.length, 3, "expected one provenance record per collage");
+
+  const sources = manifest.assets.flatMap((asset) => asset.sources);
+  const expectedObjectIds = [241307, 247458, 251485, 253053, 254272, 254779];
+  assert.deepEqual(sources.map((source) => source.objectId).sort(), expectedObjectIds);
+
+  for (const source of sources) {
+    assert.equal(source.institution, "The Metropolitan Museum of Art");
+    assert.equal(source.publicDomain, true);
+    assert.equal(source.sourcePage, `https://www.metmuseum.org/art/collection/search/${source.objectId}`);
+    assert.match(source.sourceImage, /^https:\/\/images\.metmuseum\.org\/CRDImages\/gr\/original\/.+\.jpg$/i);
+    assert.ok(source.accessionNumber && source.creditLine, `missing credit record for Met ${source.objectId}`);
+  }
+});
