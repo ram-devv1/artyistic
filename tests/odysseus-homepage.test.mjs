@@ -121,7 +121,7 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   const journey = page.match(/<section\b[^>]*id=["']journey["'][\s\S]*?<\/section>/)?.[0] ?? "";
 
   assert.match(page, /^"use client";/);
-  assert.match(page, /import \{ motion, useMotionValue, useReducedMotion, useScroll, useTransform \} from ["']motion\/react["']/);
+  assert.match(page, /import \{ animate, motion, useMotionValue, useReducedMotion, useScroll, useTransform \} from ["']motion\/react["']/);
   assert.match(page, /const heroRef = useRef<HTMLElement>\(null\)/);
   assert.match(page, /useScroll\(\{\s*target: heroRef,\s*offset: \[["']start start["'], ["']end start["']\],?\s*\}\)/);
   assert.match(page, /useTransform\(scrollYProgress, \[0, 1\], \[["']0%["'], ["']12%["']\]\)/);
@@ -155,6 +155,69 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
   assert.match(reducedMotion, /\.hero-plate[\s\S]*?animation\s*:\s*none/);
   assert.match(reducedMotion, /\.hero-word__line[\s\S]*?transform\s*:\s*none\s*!important/);
+});
+
+test("the middle acts have distinct reduced-motion-safe choreography", () => {
+  const section = (id) => page.match(new RegExp(`<section\\b[^>]*id=["']${id}["'][\\s\\S]*?<\\/section>`))?.[0] ?? "";
+  const sea = section("sea");
+  const cunning = section("cunning");
+  const memory = section("memory");
+  const recognition = section("recognition");
+
+  assert.match(page, /const revealViewport = \{ once: true, amount: 0\.3 \}/);
+
+  assert.match(sea, /ref=\{seaRef\}/);
+  assert.match(sea, /<motion\.span\b[^>]*className=["']section-title-mask__line["']/);
+  assert.match(sea, /className=["']sea-route["']/);
+  assert.match(sea, /className=["']ship-marker["']/);
+  assert.match(sea, /offsetDistance: reducedMotion \? ["']100%["'] : ["']0%["']/);
+  assert.match(sea, /whileInView=\{reducedMotion \? undefined : \{ offsetDistance: ["']100%["'] \}\}/);
+  assert.equal(sea.match(/<motion\.li\b/g)?.length, 6, "all six losses must rise independently");
+  assert.equal(sea.match(/\bsea-step\b/g)?.length, 6, "all six losses need the interaction hook");
+  assert.equal(sea.match(/\bsea-step__rule\b/g)?.length, 6, "all six losses need a drawing rule");
+  assert.equal(sea.match(/whileHover=\{reducedMotion \? undefined : \{ x: 4 \}\}/g)?.length, 6, "sea losses must shift exactly 4px on hover");
+
+  assert.equal(cunning.match(/<motion\.article\b/g)?.length, 4, "all four cunning cards must reveal");
+  assert.equal(cunning.match(/\bcunning-card__rule\b/g)?.length, 4, "all four cunning borders must draw");
+  assert.equal(cunning.match(/x: -32/g)?.length, 2, "two cunning cards must enter from the left");
+  assert.equal(cunning.match(/x: 32/g)?.length, 2, "two cunning cards must enter from the right");
+  assert.equal(cunning.match(/whileHover=\{reducedMotion \? undefined : \{ y: -4 \}\}/g)?.length, 4, "cunning cards must lift exactly 4px");
+
+  assert.match(page, /useScroll\(\{\s*target: memoryRef,\s*offset: \[["']start end["'], ["']end start["']\],?\s*\}\)/);
+  assert.match(page, /useTransform\(memoryScrollYProgress, \[0, 1\], \[["']-4%["'], ["']4%["']\]\)/);
+  assert.match(memory, /className=["']memory-plate["']/);
+  assert.match(memory, /scale: reducedMotion \? 1 : 1\.08/);
+  assert.equal(memory.match(/\bmemory-line\b/g)?.length, 2, "the memory heading and introduction must reveal line by line");
+  assert.equal(memory.match(/<motion\.article\b/g)?.length, 2, "both named shades must rise");
+  assert.equal(memory.match(/\bmemory-voice__rule\b/g)?.length, 2, "both shade rules must draw");
+
+  assert.match(page, /useScroll\(\{\s*target: recognitionRef,\s*offset: \[["']start end["'], ["']end start["']\],?\s*\}\)/);
+  assert.match(recognition, /className=["']recognition-weave["']/);
+  assert.match(recognition, /className=["'][^"']*\brv-clip\b[^"']*\brecognition-plate\b/);
+  assert.match(recognition, /clipPath: ["']inset\(0 0 0 100%\)["']/);
+  assert.equal(recognition.match(/<motion\.article\b/g)?.length, 3, "all three signs must stagger in");
+  assert.equal(recognition.match(/<RecognitionIndex\b/g)?.length, 3, "all three signs must count their index");
+  for (const value of [1, 2, 3]) assert.match(recognition, new RegExp(`<RecognitionIndex value=\\{${value}\\}`));
+
+  const tickerCopy = "Troy / The cave / Almost home / Six taken / One hull / One survivor / Ithaca";
+  assert.ok(page.includes(`const tickerCopy = "${tickerCopy}"`), "ticker copy must stay exact");
+  const ticker = page.match(/<div\b[^>]*className=["']ticker["'][^>]*>[\s\S]*?<\/div>/)?.[0] ?? "";
+  assert.ok(ticker, "missing ticker");
+  assert.match(ticker, /aria-hidden=["']true["']/);
+  assert.equal(page.match(/className=["']ticker["']/g)?.length, 1, "expected exactly one decorative ticker");
+
+  assert.match(stylesheet, /\.ship-marker\s*\{[^}]*offset-path\s*:/s);
+  assert.match(stylesheet, /\.sea-step:hover\s+\.sea-step__label\s*\{[^}]*color\s*:\s*var\(--brick\)/s);
+  assert.match(stylesheet, /\.sea-step:hover::before\s*\{[^}]*scaleY\(1\)/s);
+  assert.match(stylesheet, /\.cunning-card:hover\s+h3::after\s*\{[^}]*scaleX\(1\)/s);
+  assert.match(stylesheet, /\.ticker\s*\{[^}]*animation\s*:\s*ticker-scroll\s+36s\s+linear\s+infinite/s);
+
+  const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
+  for (const hook of ["section-title-mask__line", "draw-line", "cunning-card", "memory-line", "memory-voice", "recognition-sign", "recognition-weave"]) {
+    assert.match(reducedMotion, new RegExp(`\\.${hook}\\b`), `missing reduced-motion final state for .${hook}`);
+  }
+  assert.match(reducedMotion, /\.ship-marker[\s\S]*?offset-distance\s*:\s*100%/);
+  assert.match(reducedMotion, /\.recognition-plate[\s\S]*?clip-path\s*:\s*inset\(0\)/);
 });
 
 test("the release package includes only the required motion runtimes", () => {

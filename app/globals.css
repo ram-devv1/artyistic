@@ -114,6 +114,12 @@ p {
   transform-origin: left center;
 }
 
+.draw-line {
+  display: block;
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
 .rv-clip {
   clip-path: var(--clip-reveal);
 }
@@ -128,11 +134,28 @@ p {
 .rv-stagger > :nth-child(5) { --rv-index: 4; }
 .rv-stagger > :nth-child(6) { --rv-index: 5; }
 
+.ticker-shell {
+  overflow: hidden;
+  background: var(--char);
+}
+
 .ticker {
+  display: flex;
   width: max-content;
   animation: ticker-scroll 36s linear infinite;
   pointer-events: none;
   will-change: transform;
+}
+
+.ticker__run {
+  flex: none;
+  padding: 1rem 3rem 1rem 0;
+  color: var(--oxidized);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .sea-wave {
@@ -469,6 +492,17 @@ footer {
   letter-spacing: -0.052em !important;
 }
 
+.section-title-mask {
+  display: block;
+  overflow: hidden;
+  padding-inline-end: 0.08em;
+}
+
+.section-title-mask__line {
+  display: block;
+  will-change: transform;
+}
+
 #sea > div,
 #cunning > div,
 #recognition > div,
@@ -498,15 +532,82 @@ footer > div {
   opacity: 0.72;
 }
 
+.sea-route {
+  position: absolute;
+  top: 3rem;
+  right: 0;
+  width: min(48rem, 52vw);
+  height: 5rem;
+  pointer-events: none;
+}
+
+.ship-marker {
+  position: absolute;
+  width: 1.4rem;
+  height: 0.55rem;
+  border-right: 0.18rem solid transparent;
+  border-bottom: 2px solid var(--brick);
+  border-left: 0.18rem solid transparent;
+  offset-anchor: center;
+  offset-distance: 100%;
+  offset-path: path("M 0 58 L 118 28 L 232 56 L 354 17 L 474 48 L 608 24 L 800 44");
+  offset-path: shape(from 0% 72.5%, line to 14.75% 35%, line to 29% 70%, line to 44.25% 21.25%, line to 59.25% 60%, line to 76% 30%, line to 100% 55%);
+  offset-rotate: 0deg;
+  will-change: offset-distance;
+}
+
+.ship-marker::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  height: 0.75rem;
+  background: var(--glint);
+}
+
 #sea ol {
   gap: clamp(1.75rem, 4vw, 4.5rem);
   border: 0 !important;
 }
 
 #sea li {
+  position: relative;
   min-height: 9rem;
   border: 0 !important;
   padding: 0 !important;
+}
+
+.sea-step::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.9rem;
+  width: 1px;
+  background: var(--brick);
+  transform: scaleY(0.24);
+  transform-origin: top center;
+  transition: transform var(--dur-2) var(--ease-enter);
+}
+
+.sea-step__rule {
+  width: 100%;
+  height: 1px;
+  margin: 0 0 1.25rem !important;
+  background: rgba(102, 135, 126, 0.64);
+}
+
+.sea-step__label {
+  transition: color var(--dur-1) ease-out;
+}
+
+.sea-step:hover::before {
+  transform: scaleY(1);
+}
+
+.sea-step:hover .sea-step__label {
+  color: var(--brick) !important;
 }
 
 #sea li span {
@@ -532,21 +633,54 @@ footer > div {
 }
 
 #cunning article {
+  position: relative;
   min-height: 15rem;
-  border-left: 2px solid var(--oxidized);
+  border-left: 0;
   background: transparent !important;
   padding: 0 0 0 clamp(1.25rem, 3vw, 2.5rem) !important;
 }
 
-#cunning article:nth-child(2),
-#cunning article:nth-child(4) {
-  border-left-color: var(--brick);
+.cunning-card__rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--oxidized);
+  transform-origin: top center;
+}
+
+#cunning article:nth-child(2) .cunning-card__rule,
+#cunning article:nth-child(4) .cunning-card__rule {
+  background: var(--brick);
 }
 
 #cunning article h3,
 #memory article h3,
 #recognition article h3 {
   color: var(--bone) !important;
+}
+
+.cunning-card h3 {
+  position: relative;
+  display: inline-block;
+}
+
+.cunning-card h3::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -0.35rem;
+  left: 0;
+  height: 1px;
+  background: var(--brick);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-2) var(--ease-enter);
+}
+
+.cunning-card:hover h3::after {
+  transform: scaleX(1);
 }
 
 #cunning article p,
@@ -570,21 +704,41 @@ footer p {
   min-height: 52rem;
 }
 
+.memory-plate {
+  position: absolute;
+  inset: -4%;
+  will-change: transform;
+}
+
 #memory img {
   filter: saturate(0.72) contrast(1.1);
 }
 
 #memory article {
-  border-color: rgba(102, 135, 126, 0.48) !important;
+  border-color: transparent !important;
+}
+
+.memory-line,
+.memory-voice {
+  will-change: transform, opacity;
+}
+
+.memory-voice__rule {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: rgba(102, 135, 126, 0.64);
 }
 
 #recognition {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
 }
 
-#recognition::before {
-  content: "";
+.recognition-weave {
   position: absolute;
   z-index: -1;
   top: 16%;
@@ -594,6 +748,7 @@ footer p {
   background: top left / 28px 20px repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='20' viewBox='0 0 28 20'%3E%3Cpath d='M0 3h18v5H10v5h18v5H8' fill='none' stroke='%2366877e' stroke-width='1'/%3E%3C/svg%3E");
   opacity: 0.12;
   pointer-events: none;
+  will-change: transform;
 }
 
 #recognition > div > div:first-child {
@@ -604,6 +759,10 @@ footer p {
   border: 0 !important;
 }
 
+.recognition-plate.rv-clip {
+  clip-path: inset(0 0 0 100%);
+}
+
 #recognition img {
   filter: saturate(0.8) contrast(1.06);
 }
@@ -611,6 +770,15 @@ footer p {
 #recognition article {
   border: 0 !important;
   padding-top: 0 !important;
+}
+
+.recognition-index {
+  display: block;
+  margin-bottom: 0.7rem;
+  color: var(--oxidized);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
 }
 
 #recognition article h3::before {
@@ -815,7 +983,8 @@ footer > div > p:first-child,
   }
 
   #sea::after,
-  .voyage-line {
+  .voyage-line,
+  .sea-route {
     top: 1.5rem;
     width: 78vw;
   }
@@ -833,7 +1002,7 @@ footer > div > p:first-child,
     min-height: 25rem !important;
   }
 
-  #recognition::before {
+  .recognition-weave {
     top: 40%;
     width: 76vw;
   }
@@ -874,6 +1043,40 @@ footer > div > p:first-child,
     transition: none;
   }
 
+  .section-title-mask__line,
+  .draw-line,
+  .cunning-card,
+  .cunning-card__rule,
+  .memory-plate,
+  .memory-line,
+  .memory-voice,
+  .recognition-sign,
+  .recognition-weave {
+    animation: none;
+    opacity: 1;
+    transform: none !important;
+    transition: none;
+    will-change: auto;
+  }
+
+  .memory-line {
+    clip-path: inset(0) !important;
+  }
+
+  .ship-marker {
+    animation: none;
+    offset-distance: 100%;
+    transform: none;
+    will-change: auto;
+  }
+
+  .recognition-plate {
+    animation: none;
+    clip-path: inset(0);
+    transform: none;
+    will-change: auto;
+  }
+
   .voyage-line,
   #sea::after,
   .bow-string,
@@ -899,5 +1102,20 @@ footer > div > p:first-child,
 
   .rv-clip {
     clip-path: inset(0);
+  }
+
+  .ticker {
+    width: auto;
+  }
+
+  .ticker__run {
+    width: 100%;
+    padding-inline: 1rem;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .ticker__run:last-child {
+    display: none;
   }
 }

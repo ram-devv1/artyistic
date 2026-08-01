@@ -1,20 +1,65 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { animate, motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
 import { CopyCommand } from "@/components/copy-command";
 
+const revealViewport = { once: true, amount: 0.3 };
+const tickerCopy = "Troy / The cave / Almost home / Six taken / One hull / One survivor / Ithaca";
+
+function RecognitionIndex({
+  active,
+  delay,
+  reducedMotion,
+  value,
+}: {
+  active: boolean;
+  delay: number;
+  reducedMotion: boolean | null;
+  value: number;
+}) {
+  const count = useMotionValue(0);
+  const display = useTransform(count, (latest) => String(Math.round(latest)).padStart(2, "0"));
+
+  useEffect(() => {
+    if (reducedMotion) {
+      count.set(value);
+      return;
+    }
+    if (!active) return;
+
+    const playback = animate(count, value, { duration: 0.56, delay, ease: [0.22, 1, 0.36, 1] });
+    return () => playback.stop();
+  }, [active, count, delay, reducedMotion, value]);
+
+  return <motion.span aria-hidden="true" className="recognition-index">{display}</motion.span>;
+}
+
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
+  const seaRef = useRef<HTMLElement>(null);
+  const memoryRef = useRef<HTMLElement>(null);
+  const recognitionRef = useRef<HTMLElement>(null);
+  const [recognitionActive, setRecognitionActive] = useState(false);
   const reducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
+  const { scrollYProgress: memoryScrollYProgress } = useScroll({
+    target: memoryRef,
+    offset: ["start end", "end start"],
+  });
+  const { scrollYProgress: recognitionScrollYProgress } = useScroll({
+    target: recognitionRef,
+    offset: ["start end", "end start"],
+  });
   const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.78], [1, 0]);
+  const memoryY = useTransform(memoryScrollYProgress, [0, 1], ["-4%", "4%"]);
+  const recognitionWeaveY = useTransform(recognitionScrollYProgress, [0, 1], ["-3%", "3%"]);
   const staticHeroY = useMotionValue(0);
   const staticHeroOpacity = useMotionValue(1);
 
@@ -105,67 +150,105 @@ export default function Home() {
           </motion.div>
         </section>
 
-        <section id="sea" aria-labelledby="sea-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+        <section ref={seaRef} id="sea" aria-labelledby="sea-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="sea-route" aria-hidden="true">
+            <motion.span
+              className="ship-marker"
+              initial={{ offsetDistance: reducedMotion ? "100%" : "0%" }}
+              whileInView={reducedMotion ? undefined : { offsetDistance: "100%" }}
+              viewport={revealViewport}
+              transition={{ duration: 4.8, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </div>
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.38fr_0.62fr]">
-              <h2 id="sea-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] text-[#D8CCB4] sm:text-7xl">The cost of return</h2>
+              <h2 id="sea-title" aria-label="The cost of return" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] text-[#D8CCB4] sm:text-7xl">
+                <span className="section-title-mask" aria-hidden="true">
+                  <motion.span
+                    className="section-title-mask__line"
+                    initial={reducedMotion ? false : { y: "112%" }}
+                    whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                    viewport={revealViewport}
+                    transition={{ duration: 0.56, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
+                  >
+                    The cost of return
+                  </motion.span>
+                </span>
+              </h2>
               <p className="max-w-3xl text-xl leading-9 text-[#D8CCB4]/72">
                 The voyage is not a catalogue of monsters. It is a register of decisions, warnings ignored, men lost, and a horizon that repeatedly lets Ithaca appear before taking it away.
               </p>
             </div>
-            <ol className="mt-14 grid border-y border-[#D8CCB4]/15 sm:grid-cols-2 lg:grid-cols-3">
-              <li className="border-b border-[#D8CCB4]/15 p-6 sm:border-r lg:border-b"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">Troy</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">Smoke, looted bronze, and victory already curdling into absence.</p></li>
-              <li className="border-b border-[#D8CCB4]/15 p-6 lg:border-b"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">The cave</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">“Nobody” saves the crew; a revealed name gives Poseidon the route home.</p></li>
-              <li className="border-b border-[#D8CCB4]/15 p-6 sm:border-r lg:border-r-0"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">Almost home</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">Ithaca enters sight. The wind-bag opens while its captain sleeps.</p></li>
-              <li className="border-b border-[#D8CCB4]/15 p-6 lg:border-b-0 lg:border-r"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">Six taken</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">At Scylla, command becomes the choice of who cannot be saved.</p></li>
-              <li className="border-b border-[#D8CCB4]/15 p-6 sm:border-b-0 sm:border-r"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">One hull</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">The Laestrygonians empty the fleet until only his black ship remains.</p></li>
-              <li className="p-6"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">One survivor</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">After Helios, every oar bench is silent except the one memory must fill.</p></li>
+            <ol className="rv-stagger mt-14 grid border-y border-[#D8CCB4]/15 sm:grid-cols-2 lg:grid-cols-3">
+              <motion.li className="sea-step border-b border-[#D8CCB4]/15 p-6 sm:border-r lg:border-b" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} whileHover={reducedMotion ? undefined : { x: 4 }} viewport={revealViewport} transition={{ duration: 0.56 }}><motion.span aria-hidden="true" className="draw-line sea-step__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56 }} /><span className="sea-step__label font-[var(--font-mono)] text-xs text-[#C8B16A]">Troy</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">Smoke, looted bronze, and victory already curdling into absence.</p></motion.li>
+              <motion.li className="sea-step border-b border-[#D8CCB4]/15 p-6 lg:border-b" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} whileHover={reducedMotion ? undefined : { x: 4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }}><motion.span aria-hidden="true" className="draw-line sea-step__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }} /><span className="sea-step__label font-[var(--font-mono)] text-xs text-[#C8B16A]">The cave</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">“Nobody” saves the crew; a revealed name gives Poseidon the route home.</p></motion.li>
+              <motion.li className="sea-step border-b border-[#D8CCB4]/15 p-6 sm:border-r lg:border-r-0" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} whileHover={reducedMotion ? undefined : { x: 4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }}><motion.span aria-hidden="true" className="draw-line sea-step__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }} /><span className="sea-step__label font-[var(--font-mono)] text-xs text-[#C8B16A]">Almost home</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">Ithaca enters sight. The wind-bag opens while its captain sleeps.</p></motion.li>
+              <motion.li className="sea-step border-b border-[#D8CCB4]/15 p-6 lg:border-b-0 lg:border-r" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} whileHover={reducedMotion ? undefined : { x: 4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }}><motion.span aria-hidden="true" className="draw-line sea-step__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }} /><span className="sea-step__label font-[var(--font-mono)] text-xs text-[#C8B16A]">Six taken</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">At Scylla, command becomes the choice of who cannot be saved.</p></motion.li>
+              <motion.li className="sea-step border-b border-[#D8CCB4]/15 p-6 sm:border-b-0 sm:border-r" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} whileHover={reducedMotion ? undefined : { x: 4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.28 }}><motion.span aria-hidden="true" className="draw-line sea-step__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.28 }} /><span className="sea-step__label font-[var(--font-mono)] text-xs text-[#C8B16A]">One hull</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">The Laestrygonians empty the fleet until only his black ship remains.</p></motion.li>
+              <motion.li className="sea-step p-6" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} whileHover={reducedMotion ? undefined : { x: 4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.35 }}><motion.span aria-hidden="true" className="draw-line sea-step__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.35 }} /><span className="sea-step__label font-[var(--font-mono)] text-xs text-[#C8B16A]">One survivor</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">After Helios, every oar bench is silent except the one memory must fill.</p></motion.li>
             </ol>
           </div>
         </section>
+
+        <div className="ticker-shell border-b border-[#D8CCB4]/10">
+          <div className="ticker" aria-hidden="true">
+            <span className="ticker__run">{tickerCopy}</span>
+            <span className="ticker__run">{tickerCopy}</span>
+          </div>
+        </div>
 
         <section id="cunning" aria-labelledby="cunning-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
             <h2 id="cunning-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">Every escape leaves a mark</h2>
             <div className="grid gap-px bg-[#D8CCB4]/15 sm:grid-cols-2">
-              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Nobody survives the cave</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">Odysseus hides beneath wool, then pride makes him name himself across the water.</p></article>
-              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Circe suspends the year</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">A cup changes bodies; moly, a blade, and an oath restore them. Survival remains negotiation.</p></article>
-              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Desire is given a boundary</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">He hears the Sirens bound upright while the crew rows past with sealed ears.</p></article>
-              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Cunning cannot save everyone</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">His intelligence is practical and violent: it preserves the vessel by accepting six deaths.</p></article>
+              <motion.article className="cunning-card bg-[#090D0F] p-7" initial={reducedMotion ? false : { opacity: 0, x: -32, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, x: 0, y: 0 }} whileHover={reducedMotion ? undefined : { y: -4 }} viewport={revealViewport} transition={{ duration: 0.56 }}><motion.span aria-hidden="true" className="cunning-card__rule" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={reducedMotion ? undefined : { scaleY: 1 }} viewport={revealViewport} transition={{ duration: 0.56 }} /><h3 className="font-[var(--font-serif)] text-3xl">Nobody survives the cave</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">Odysseus hides beneath wool, then pride makes him name himself across the water.</p></motion.article>
+              <motion.article className="cunning-card bg-[#090D0F] p-7" initial={reducedMotion ? false : { opacity: 0, x: 32, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, x: 0, y: 0 }} whileHover={reducedMotion ? undefined : { y: -4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }}><motion.span aria-hidden="true" className="cunning-card__rule" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={reducedMotion ? undefined : { scaleY: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }} /><h3 className="font-[var(--font-serif)] text-3xl">Circe suspends the year</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">A cup changes bodies; moly, a blade, and an oath restore them. Survival remains negotiation.</p></motion.article>
+              <motion.article className="cunning-card bg-[#090D0F] p-7" initial={reducedMotion ? false : { opacity: 0, x: -32, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, x: 0, y: 0 }} whileHover={reducedMotion ? undefined : { y: -4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }}><motion.span aria-hidden="true" className="cunning-card__rule" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={reducedMotion ? undefined : { scaleY: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }} /><h3 className="font-[var(--font-serif)] text-3xl">Desire is given a boundary</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">He hears the Sirens bound upright while the crew rows past with sealed ears.</p></motion.article>
+              <motion.article className="cunning-card bg-[#090D0F] p-7" initial={reducedMotion ? false : { opacity: 0, x: 32, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, x: 0, y: 0 }} whileHover={reducedMotion ? undefined : { y: -4 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }}><motion.span aria-hidden="true" className="cunning-card__rule" initial={reducedMotion ? false : { scaleY: 0 }} whileInView={reducedMotion ? undefined : { scaleY: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }} /><h3 className="font-[var(--font-serif)] text-3xl">Cunning cannot save everyone</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">His intelligence is practical and violent: it preserves the vessel by accepting six deaths.</p></motion.article>
             </div>
           </div>
         </section>
 
-        <section id="memory" aria-labelledby="memory-title" className="border-b border-[#D8CCB4]/10">
+        <section id="memory" ref={memoryRef} aria-labelledby="memory-title" className="border-b border-[#D8CCB4]/10">
           <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
             <div className="relative min-h-[32rem] overflow-hidden lg:min-h-[48rem]">
-              <Image
-                src="/assets/odysseus-underworld.webp"
-                alt="Odysseus kneels beside the blood offering while the shades gather in a sea cave"
-                fill
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover"
-              />
+              <motion.div className="memory-plate" style={{ y: reducedMotion ? staticHeroY : memoryY, scale: reducedMotion ? 1 : 1.08 }}>
+                <Image
+                  src="/assets/odysseus-underworld.webp"
+                  alt="Odysseus kneels beside the blood offering while the shades gather in a sea cave"
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </motion.div>
             </div>
             <div className="px-4 py-16 sm:px-10 lg:px-16 lg:py-24">
-              <h2 id="memory-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">The dead speak</h2>
-              <p className="mt-7 text-lg leading-8 text-[#D8CCB4]/70">The underworld belongs to Odysseus’s reckoning. The war’s famous kings enter only as shadows inside his return.</p>
+              <motion.h2 id="memory-title" className="memory-line font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl" initial={reducedMotion ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, clipPath: "inset(0)" }} viewport={revealViewport} transition={{ duration: 0.56 }}>The dead speak</motion.h2>
+              <motion.p className="memory-line mt-7 text-lg leading-8 text-[#D8CCB4]/70" initial={reducedMotion ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 100% 0)" }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, clipPath: "inset(0)" }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }}>The underworld belongs to Odysseus’s reckoning. The war’s famous kings enter only as shadows inside his return.</motion.p>
               <div className="mt-10 space-y-8">
-                <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Achilles rejects dead glory</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">His answer strips victory of its polish: life without rank would be worth more than rule among shades.</p></article>
-                <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Agamemnon warns of the door</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">A king can reach home and still be murdered there. Odysseus learns to return concealed.</p></article>
+                <motion.article className="memory-voice relative border-t border-[#D8CCB4]/15 pt-6" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }}><motion.span aria-hidden="true" className="draw-line memory-voice__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }} /><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Achilles rejects dead glory</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">His answer strips victory of its polish: life without rank would be worth more than rule among shades.</p></motion.article>
+                <motion.article className="memory-voice relative border-t border-[#D8CCB4]/15 pt-6" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }}><motion.span aria-hidden="true" className="draw-line memory-voice__rule" initial={reducedMotion ? false : { scaleX: 0 }} whileInView={reducedMotion ? undefined : { scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.21 }} /><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Agamemnon warns of the door</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">A king can reach home and still be murdered there. Odysseus learns to return concealed.</p></motion.article>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="recognition" aria-labelledby="recognition-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+        <section id="recognition" ref={recognitionRef} aria-labelledby="recognition-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <motion.div className="recognition-weave" aria-hidden="true" style={{ y: reducedMotion ? staticHeroY : recognitionWeaveY }} />
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-12 lg:grid-cols-[0.84fr_1.16fr] lg:items-end">
               <div>
                 <h2 id="recognition-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">Home arrives as a sequence of signs</h2>
                 <p className="mt-7 max-w-xl text-lg leading-8 text-[#D8CCB4]/70">Athena folds him into mist and a beggar’s body. Recognition comes quietly, through witnesses that cannot be persuaded by a crown.</p>
               </div>
-              <div className="relative min-h-[30rem] overflow-hidden border border-[#D8CCB4]/10">
+              <motion.div
+                className="rv-clip recognition-plate relative min-h-[30rem] overflow-hidden border border-[#D8CCB4]/10"
+                initial={reducedMotion ? false : { clipPath: "inset(0 0 0 100%)" }}
+                whileInView={reducedMotion ? undefined : { clipPath: "inset(0)" }}
+                onViewportEnter={() => setRecognitionActive(true)}
+                viewport={revealViewport}
+                transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <Image
                   src="/assets/odysseus-homecoming.webp"
                   alt="The old dog Argos recognizes a disguised Odysseus at the threshold of his Ithacan house"
@@ -173,12 +256,12 @@ export default function Home() {
                   sizes="(min-width: 1024px) 58vw, 100vw"
                   className="object-cover"
                 />
-              </div>
+              </motion.div>
             </div>
-            <div className="mt-12 grid gap-8 md:grid-cols-3">
-              <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></article>
-              <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></article>
-              <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></article>
+            <div className="rv-stagger mt-12 grid gap-8 md:grid-cols-3">
+              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56 }}><RecognitionIndex value={1} active={recognitionActive} delay={0} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></motion.article>
+              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.07 }}><RecognitionIndex value={2} active={recognitionActive} delay={0.07} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></motion.article>
+              <motion.article className="recognition-sign border-t border-[#D8CCB4]/15 pt-6" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56, delay: 0.14 }}><RecognitionIndex value={3} active={recognitionActive} delay={0.14} reducedMotion={reducedMotion} /><h3 className="font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></motion.article>
             </div>
           </div>
         </section>
