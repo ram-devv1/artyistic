@@ -12,9 +12,9 @@ Artystic is a cross-agent design-polish skill for pages that already work but st
 
 ## v1.2: The Long Return
 
-The Odysseus homepage now pairs layered narrative motion with three public-domain archival collages. Motion for React drives section choreography, Lenis provides inertial scrolling, and native CSS handles ambient effects with complete reduced-motion states.
+The Odysseus homepage is a four-act moving art book built around original narrative paintings of Troy, the sea, the Underworld, and Ithaca. Motion for React drives restrained scene depth, Lenis provides inertial scrolling, and native CSS handles ambient texture with complete reduced-motion states.
 
-The collage pipeline records schema-v3 provenance in `public/assets/odysseus-sources.json`. Reusable motion and imagery contracts live in `skills/artystic/references/motion-language.md` and `skills/artystic/references/imagery-language.md` so future Artystic themes can use the same source and interaction discipline.
+Reusable motion and imagery contracts live in `skills/artystic/references/motion-language.md` and `skills/artystic/references/imagery-language.md` so future Artystic themes can use the same asset-first and interaction discipline.
 
 ## How to use it
 
@@ -47,8 +47,7 @@ It is designed for cross-agent use, including:
 ```text
 app/                              Next.js pages, layout, motion provider, and styles
 components/                       Motion, smooth-scroll, grain, and UI components
-public/assets/                    Archival collages and schema-v3 provenance
-scripts/build-collages.sh         Reproducible public-domain collage pipeline
+public/assets/                    Original narrative paintings and brand assets
 skills/artystic/SKILL.md          Bundled cross-agent skill router
 skills/artystic/references/       Odysseus, motion, and imagery contracts
 bin/artystic.mjs                  CLI entrypoint

@@ -1,4 +1,4 @@
 interface:
   display_name: "Artystic"
   short_description: "Authored editorial web art direction"
-  default_prompt: "Use $artystic to commission authored archival collages and layered narrative motion for this page."
+  default_prompt: "Use $artystic to create an asset-first, image-led editorial page with authored artwork and restrained narrative motion."

@@ -29,7 +29,7 @@ Turn competent web screens into authored artifacts. Preserve the product's purpo
 ## Enforce the quality bar
 
 - Prefer asymmetry, editorial rhythm, precise copy, and one clear action. Avoid generic card grids, pill soup, arbitrary gradients, and copied references.
-- Refuse AI-generated editorial pixels and copied film assets, actor likenesses, or production-specific title treatments.
+- Refuse unreviewed generated imagery, generic AI-looking assets, copied film material, actor likenesses, and production-specific title treatments.
 - Permit disciplined motion runtimes only when motion serves narrative, respects reduced motion, and never hides content or meaning.
 - Refuse inaccessible contrast, hidden focus, embedded critical copy, missing alt text, or interaction that depends on animation.
 - Finish only when the page feels specific to its subject rather than transferable to another brand unchanged.

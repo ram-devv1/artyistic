@@ -1,65 +1,34 @@
 # Shared imagery language
 
-Treat editorial images as authored archival collages: compose verified public-domain museum objects with hard crops, limited palettes, print grain, and plate frames. Generative pixel synthesis is not `authored` for editorial use.
+Make the image system before laying out the page. Real assets determine crop, palette, type scale, negative space, and motion; placeholders do not.
 
-## Source and verify
+## Choose the image source honestly
 
-1. Use only CC0 or public-domain object photography from a museum record.
-2. Verify `isPublicDomain: true` on the object record; do not infer rights from age, search results, or a repost.
-3. Record the object title, accession number, object date or period, culture, credit line, canonical record URL, source image URL, and license before downloading.
-4. Download the highest available scan. Preserve the raw file outside the published asset tree.
-5. Prefer close object details when they carry texture or gesture. Never crop a source to imply a false subject or omit it from provenance.
-6. Build a labeled contact sheet, review candidates together, then perform a full-size review of every chosen source and final export.
+- Use commissioned or generated artwork when the user asks for an original narrative scene.
+- Use public-domain or licensed archive material when the brief calls for documentary, historical, or collage work.
+- Never mix those modes without labeling them. Never invent provenance or present a modern composition as archaeology.
+- Refuse copied film frames, actor likenesses, production costumes, posters, title treatments, or close imitation of a living artist.
 
-## Compose the collage
+## Direct original artwork
 
-Gather → verify → download → crop hard → convert to grayscale → level → duotone inside the product palette → composite with deliberate scale and text-safe space → add restrained print grain and plate rules → export sRGB WebP at a sane payload. Keep text in HTML, never in pixels.
+Define the scene, emotional beat, period constraints, medium, composition, crop, light, and avoid list before generation. Describe physical craft—underdrawing, glaze, paper or canvas, edge handling, corrections, pigment variation—instead of vague style labels such as “cinematic.”
 
-Reject cutout halos, painterly blending, glossy AI gradients, synthetic heroic portraits, fake historical scenes, decorative artifact soup, random grain, film stills, actor likenesses, and copied production costumes or title treatments. Make the collage visibly editorial, not a claim that its objects occupied one historical scene.
+Reject the first output when it has any common generated-image tell: plastic skin, broken anatomy, impossible hands or rigging, symmetrical poster staging, glossy fantasy lighting, smooth digital gradients, decorative artifact soup, unreadable objects, or a focal point unrelated to the narrative.
 
-## Manifest schema v3
+Inspect every final at full size. Apply restrained local grading or texture only after the subject, anatomy, period detail, and composition pass. Keep text in HTML, not in the pixels. Export a compact sRGB WebP and preserve the source prompt or commission brief in the project record.
 
-Create one record per published asset:
+## Direct archival work
 
-```json
-{
-  "schemaVersion": 3,
-  "provenance": {
-    "mode": "curated public-domain collage",
-    "thirdPartyVisualPixels": true,
-    "filmAssets": false,
-    "disclosure": "Modern editorial collages assembled from credited public-domain museum objects."
-  },
-  "assets": [{
-    "asset": "/assets/example.webp",
-    "storyBeat": "Narrative purpose",
-    "compositionNote": "Crop, treatment, and source-boundary note",
-    "objects": [{
-      "title": "Museum object title",
-      "accessionNumber": "00.0.0",
-      "objectDate": "Museum-supplied date",
-      "culture": "Museum-supplied culture",
-      "creditLine": "Museum credit line",
-      "sourceUrl": "https://museum.example/object",
-      "license": "CC0"
-    }],
-    "output": { "width": 1600, "height": 1000, "format": "WebP", "colorSpace": "sRGB" }
-  }]
-}
-```
+Verify rights on the canonical source record before download. Record title, date, culture, credit line, record URL, image URL, and license. Compose verified material with deliberate crops and an explicit “modern editorial collage” boundary. Do not crop a source to imply a false subject.
 
-## Alt text contract
+## Place images in the interface
 
-Describe the final composition and its narrative beat, not its filename, visual style, or full credit ledger. Use empty alt text only for genuinely decorative plates; never place critical copy inside the image.
-
-## Caption contract
-
-Label the image as a modern editorial collage when that boundary is not obvious. Keep interpretation in the caption, object facts in the provenance manifest, and provide a nearby source link without turning alt text into attribution.
-
-## Source boundary contract
-
-Separate museum-record facts, historical context, later visual reception, and original modern composition. Attribute each object exactly as its record does. Never present a composite, crop, or modern art direction as documentary evidence or an archaeological reconstruction.
+- Let one image system dominate the page; do not mix stock photos, painted scenes, vases, diagrams, and synthetic renders.
+- Give each viewport one focal image or one typographic focal point.
+- When imagery is loud, make typography smaller and quieter. When type is dominant, simplify the crop beneath it.
+- Reuse an image only when a new crop, scale, state, or detail advances the story.
+- Supply meaningful alt text that describes the scene and narrative beat, not the filename or visual style.
 
 ## Completion contract
 
-Finish only when every object has verified rights and complete provenance; contact-sheet and full-size reviews pass; crops remain legible at mobile size; no halo, text, generative, film, or actor pixels remain; exports are sRGB WebP with dimensions and restrained payloads; and alt text, caption, source link, and manifest agree.
+Finish only after every chosen asset passes full-size inspection, mobile crops preserve the subject, copy remains readable, provenance matches the actual source mode, and the page no longer looks transferable to an unrelated brand.
