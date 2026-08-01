@@ -34,7 +34,7 @@ Use motion to narrate. Make every animation answer: “What does this tell the r
 - Use `motion/react` for viewport-driven and state-driven choreography.
 - Use Lenis only for inertial smooth scroll. Disable it when `prefers-reduced-motion: reduce` matches; preserve anchors, keyboard scrolling, and native semantics.
 - Use CSS keyframes for ambient loops and CSS transitions for hover or focus feedback. Never use both systems on the same element.
-- Add another runtime only when the required timeline cannot be expressed with this stack and document the measured need first.
+- Use only Motion and Lenis. Do not add a third motion runtime unless the user explicitly changes this contract.
 
 ## Reduced-motion contract
 

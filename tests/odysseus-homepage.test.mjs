@@ -516,6 +516,8 @@ test("the shared motion and imagery languages lock reusable contracts", async ()
   assert.match(motionLanguage, /motion\/react/);
   assert.match(motionLanguage, /lenis/i);
   assert.match(motionLanguage, /never use both systems on the same element/i);
+  assert.match(motionLanguage, /Use only Motion and Lenis\.[^\n]*unless the user explicitly changes this contract/i);
+  assert.doesNotMatch(motionLanguage, /another runtime[^\n]*(?:timeline|document|measured need)/i);
   assert.match(motionLanguage, /act[^\n]*unique[^\n]*motion moment/i);
   assert.match(motionLanguage, /MotionConfig[^\n]*reducedMotion=["'`]user["'`]/);
   assert.match(motionLanguage, /prefers-reduced-motion/);
