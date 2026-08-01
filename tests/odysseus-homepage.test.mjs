@@ -6,6 +6,23 @@ const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8")
 const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
+function extractBlock(source, marker) {
+  const markerStart = source.indexOf(marker);
+  assert.notEqual(markerStart, -1, `missing block for ${marker}`);
+
+  const start = source.indexOf("{", markerStart + marker.length);
+  assert.notEqual(start, -1, `missing block for ${marker}`);
+
+  let depth = 1;
+  for (let end = start + 1; end < source.length; end += 1) {
+    if (source[end] === "{") depth += 1;
+    if (source[end] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start + 1, end);
+  }
+
+  assert.fail(`unclosed block for ${marker}`);
+}
+
 test("the homepage source declares the complete Long Return contract", () => {
   assert.match(page, /The Long Return/);
   assert.equal(page.match(/<section\b/g)?.length, 6, "expected six narrative acts");
@@ -62,8 +79,19 @@ test("the homepage source declares the complete Long Return contract", () => {
 });
 
 test("the visual system keeps its motion and input affordance contracts", () => {
-  assert.match(stylesheet, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
-  assert.match(stylesheet, /:focus-visible/);
-  assert.match(stylesheet, /\.voyage-line/);
-  assert.match(stylesheet, /\.bow-string/);
+  const focusRule = extractBlock(stylesheet, ":focus-visible");
+  const outline = focusRule.match(/(?:^|;)\s*outline\s*:\s*([^;}]+)/i)?.[1].replace(/\s*!important\s*$/i, "").trim();
+  assert.ok(outline && !/^(?:none|0(?:\.0+)?(?:[a-z%]+)?)$/i.test(outline), ":focus-visible must keep a visible outline");
+
+  const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
+  const rules = [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+
+  for (const target of [".voyage-line", ".bow-string"]) {
+    assert.ok(
+      rules.some(([, selectors, declarations]) =>
+        selectors.split(",").map((selector) => selector.trim()).includes(target)
+        && /\banimation(?:-name)?\s*:\s*none\b/i.test(declarations)),
+      `${target} must disable animation for reduced motion`,
+    );
+  }
 });
