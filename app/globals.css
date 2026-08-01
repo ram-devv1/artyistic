@@ -23,6 +23,7 @@
 }
 
 html {
+  overflow-x: hidden;
   background: var(--hull);
   scroll-behavior: auto !important;
 }
@@ -34,6 +35,14 @@ body {
   background: var(--hull);
   color: var(--bone);
   font-family: var(--font-sans), sans-serif;
+}
+
+.font-\[var\(--font-serif\)\] {
+  font-family: var(--font-serif), serif;
+}
+
+.font-\[var\(--font-mono\)\] {
+  font-family: var(--font-mono), monospace;
 }
 
 a {
@@ -147,6 +156,13 @@ footer {
 #journey nav[aria-label="Odysseus voyage index"] {
   max-width: 62rem;
   border-color: rgba(216, 204, 180, 0.26) !important;
+}
+
+#journey nav[aria-label="Odysseus voyage index"] a {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
 }
 
 #journey nav[aria-label="Odysseus voyage index"] a:hover {
@@ -464,6 +480,11 @@ footer > div > p:first-child,
     gap: 1rem !important;
   }
 
+  header nav a:nth-child(2),
+  header nav a:nth-child(3) {
+    display: none;
+  }
+
   #journey > img {
     object-position: 68% center !important;
     opacity: 0.4 !important;
@@ -502,6 +523,10 @@ footer > div > p:first-child,
   .voyage-line {
     top: 1.5rem;
     width: 78vw;
+  }
+
+  #recognition > div > div:first-child {
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   #sea li,

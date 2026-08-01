@@ -5,6 +5,7 @@ import test from "node:test";
 const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 
 function extractBlock(source, marker) {
   const markerStart = source.indexOf(marker);
@@ -50,6 +51,9 @@ test("Artystic routes the exact Odysseus theme to its complete contract", async 
   }
 
   assert.match(reference, /modern interpretive lens[^\n]*never[^\n]*Homeric diagnosis/i);
+  assert.match(reference, /draw one voyage route[^\n]*sea passage/i);
+  assert.match(reference, /tighten the final bowstring[^\n]*invocation/i);
+  assert.doesNotMatch(reference, /drift the hero collage/i, "the reusable motion contract must match the shipped route and bowstring pair");
 });
 
 test("the homepage source declares the complete Long Return contract", () => {
@@ -73,7 +77,7 @@ test("the homepage source declares the complete Long Return contract", () => {
   const images = [
     ["/assets/odysseus-hero.webp", "Storm-dark Aegean voyage collage tracing the long return to Ithaca"],
     ["/assets/odysseus-underworld.webp", "Underworld remembrance collage of sacrifice, memory, and counsel"],
-    ["/assets/odysseus-homecoming.webp", "Ithaca recognition still life with mist, woven thread, and olive wood"],
+    ["/assets/odysseus-homecoming.webp", "Archival collage of Odysseus returning to Penelope with the archer and Athena's owl"],
   ];
 
   for (const [src, alt] of images) {
@@ -108,9 +112,22 @@ test("the homepage source declares the complete Long Return contract", () => {
 });
 
 test("the visual system keeps its motion and input affordance contracts", () => {
+  const htmlRule = extractBlock(stylesheet, "html");
+  assert.match(htmlRule, /overflow-x\s*:\s*(?:hidden|clip)\b/i);
+
+  const serifFontRule = extractBlock(stylesheet, String.raw`.font-\[var\(--font-serif\)\]`);
+  assert.match(serifFontRule, /font-family\s*:\s*var\(--font-serif\),\s*serif\b/i);
+
+  const monoFontRule = extractBlock(stylesheet, String.raw`.font-\[var\(--font-mono\)\]`);
+  assert.match(monoFontRule, /font-family\s*:\s*var\(--font-mono\),\s*monospace\b/i);
+
   const focusRule = extractBlock(stylesheet, ":focus-visible");
   const outline = focusRule.match(/(?:^|;)\s*outline\s*:\s*([^;}]+)/i)?.[1].replace(/\s*!important\s*$/i, "").trim();
   assert.ok(outline && !/^(?:none|0(?:\.0+)?(?:[a-z%]+)?)$/i.test(outline), ":focus-visible must keep a visible outline");
+
+  const voyageLinkRule = extractBlock(stylesheet, '#journey nav[aria-label="Odysseus voyage index"] a');
+  assert.match(voyageLinkRule, /min-height\s*:\s*44px\b/i);
+  assert.match(voyageLinkRule, /min-width\s*:\s*44px\b/i);
 
   const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
   const rules = [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
@@ -123,4 +140,18 @@ test("the visual system keeps its motion and input affordance contracts", () => 
       `${target} must disable animation for reduced motion`,
     );
   }
+});
+
+test("the mobile layout keeps recognition art and primary navigation visible", () => {
+  const mobile = extractBlock(stylesheet, "@media (max-width: 767px)");
+  const recognitionGrid = extractBlock(mobile, "#recognition > div > div:first-child");
+  assert.match(recognitionGrid, /grid-template-columns\s*:\s*minmax\(0,\s*1fr\)\s*!important/i);
+
+  const compactNavigation = extractBlock(mobile, "header nav a:nth-child(2)");
+  assert.match(compactNavigation, /display\s*:\s*none\b/i);
+  assert.match(mobile, /header nav a:nth-child\(2\)\s*,\s*header nav a:nth-child\(3\)/i);
+});
+
+test("the release package exposes the production build", () => {
+  assert.equal(packageJson.scripts.build, "next build");
 });

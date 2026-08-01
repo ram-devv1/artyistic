@@ -35,6 +35,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "build": "next build",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "bun run typecheck && bun run lint"

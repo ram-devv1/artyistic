@@ -50,8 +50,8 @@ Use a cold, time-worn palette:
 
 Use exactly two meaningful motion moments:
 
-1. Drift the hero collage subtly while the opening copy resolves from darkness.
-2. Draw one voyage line on scroll and resolve it into a taut bowstring.
+1. Draw one voyage route across the sea passage.
+2. Tighten the final bowstring once at the invocation.
 
 Keep every other state static. Use native CSS, DOM, and SVG; do not add an animation or video runtime. Under `prefers-reduced-motion`, show the complete route and final states immediately.
 

@@ -119,7 +119,7 @@ export default function Home() {
               <div className="relative min-h-[30rem] overflow-hidden border border-[#D8CCB4]/10">
                 <Image
                   src="/assets/odysseus-homecoming.webp"
-                  alt="Ithaca recognition still life with mist, woven thread, and olive wood"
+                  alt="Archival collage of Odysseus returning to Penelope with the archer and Athena's owl"
                   fill
                   sizes="(min-width: 1024px) 58vw, 100vw"
                   className="object-cover"
