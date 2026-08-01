@@ -55,27 +55,28 @@ done
   -seed 12 -attenuate 0.012 +noise Gaussian -colorspace sRGB -strip -quality 80 \
   -define webp:method=6 "$OUT/odysseus-hero.webp"
 
-# Underworld: the same funerary figure survives as three unequally remembered plates.
+# Underworld: the funerary scene returns as fragments that strengthen toward the blood line.
 "$MAGICK" "$RAW/247458.jpg" -crop 930x1550+920+1370 +repage -colorspace gray \
   -negate -level 5%,78% -fill '#294f4a' -colorize 18 -resize 430x900! "$BUILD/underworld-center.png"
-"$MAGICK" "$BUILD/underworld-center.png" -crop 340x790+0+70 +repage -resize 380x810! \
-  -channel A -evaluate set 42% +channel "$BUILD/underworld-left.png"
-"$MAGICK" "$BUILD/underworld-center.png" -crop 300x760+130+100 +repage -resize 300x760! \
-  -channel A -evaluate set 38% +channel "$BUILD/underworld-right.png"
-"$MAGICK" "$BUILD/underworld-center.png" -channel A -evaluate set 76% +channel \
-  "$BUILD/underworld-main.png"
+"$MAGICK" "$BUILD/underworld-center.png" -crop 430x330+0+0 +repage -resize 700x310! \
+  -channel A -evaluate set 26% +channel "$BUILD/underworld-top.png"
+"$MAGICK" "$BUILD/underworld-center.png" -crop 430x350+0+210 +repage -resize 730x350! \
+  -channel A -evaluate set 50% +channel "$BUILD/underworld-middle.png"
+"$MAGICK" "$BUILD/underworld-center.png" -crop 430x360+0+480 +repage -resize 780x390! \
+  -channel A -evaluate set 78% +channel "$BUILD/underworld-bottom.png"
 "$MAGICK" -size 1536x1024 xc:'#0a0e10' \
-  "$BUILD/underworld-left.png" -geometry +264+108 -compose over -composite \
-  "$BUILD/underworld-main.png" -geometry +552+52 -compose over -composite \
-  "$BUILD/underworld-right.png" -geometry +982+154 -compose over -composite \
+  "$BUILD/underworld-top.png" -geometry +430+54 -compose over -composite \
+  "$BUILD/underworld-middle.png" -geometry +350+284 -compose over -composite \
+  "$BUILD/underworld-bottom.png" -geometry +410+530 -compose over -composite \
   -fill none -stroke '#273237' -strokewidth 2 \
-  -draw 'rectangle 254,98 654,932 rectangle 542,42 992,966 rectangle 972,144 1292,938' \
-  -stroke '#963f35' -strokewidth 3 -draw 'line 206,820 1330,820' \
+  -draw 'rectangle 420,44 1140,374 rectangle 340,274 1090,644 rectangle 400,520 1200,930' \
+  -stroke '#963f35' -strokewidth 3 -draw 'line 206,728 1330,728' \
   -seed 24 -attenuate 0.012 +noise Gaussian -colorspace sRGB -strip -quality 80 \
   -define webp:method=6 "$OUT/odysseus-underworld.webp"
 
-# Homecoming: relief, archer, and owl arranged as one recognition register.
-"$MAGICK" "$RAW/253053.jpg" -resize '1110x860^' -gravity center -extent 1110x860 \
+# Homecoming: relief, archer, and owl read left to right in equal editorial panels.
+"$MAGICK" "$RAW/253053.jpg" -crop 1300x1500+300+20 +repage -resize '470x820^' \
+  -gravity center -extent 470x820 \
   -colorspace gray -level 5%,92% -fill '#d8ccb4' -colorize 15 "$BUILD/home-relief.png"
 "$MAGICK" "$RAW/251485.jpg" -crop 500x660+500+800 +repage -resize '300x360^' \
   -gravity center -extent 300x360 -colorspace gray -threshold 35% -transparent black \
@@ -84,11 +85,11 @@ done
   -gravity center -extent 300x330 -colorspace gray -threshold 48% -transparent black \
   -fill '#d8ccb4' -colorize 100 "$BUILD/home-owl.png"
 "$MAGICK" -size 1536x1024 xc:'#0a0e10' \
-  "$BUILD/home-relief.png" -geometry +0+82 -compose over -composite \
-  "$BUILD/home-archer.png" -geometry +1190+132 -compose over -composite \
-  "$BUILD/home-owl.png" -geometry +1182+616 -compose over -composite \
+  "$BUILD/home-relief.png" -geometry +22+102 -compose over -composite \
+  "$BUILD/home-archer.png" -geometry +618+332 -compose over -composite \
+  "$BUILD/home-owl.png" -geometry +1130+347 -compose over -composite \
   -fill none -stroke '#293438' -strokewidth 2 \
-  -draw 'rectangle 12,68 1124,956 line 1138,68 1138,956 line 1138,572 1510,572' \
+  -draw 'rectangle 12,68 1524,956 line 512,68 512,956 line 1024,68 1024,956' \
   -seed 36 -attenuate 0.012 +noise Gaussian -colorspace sRGB -strip -quality 80 \
   -define webp:method=6 "$OUT/odysseus-homecoming.webp"
 
