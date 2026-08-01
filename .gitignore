@@ -8,3 +8,4 @@ build
 .env*
 *.tsbuildinfo
 .DS_Store
+.assetwork/
