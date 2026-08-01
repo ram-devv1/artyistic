@@ -40,3 +40,15 @@ test("the visual system keeps accessible static and narrow-screen states", () =>
   assert.match(css, /:focus-visible/);
   assert.match(css, /\.hero\s*\{[\s\S]*min-height: 100dvh/);
 });
+
+test("scroll motion stages chapters without adding another runtime", () => {
+  assert.match(page, /new IntersectionObserver/);
+  assert.match(page, /data-active=\{activeChapter === href\.slice\(1\)\}/);
+  assert.equal(page.match(/className="scene-stage"/g)?.length, 2);
+  assert.equal(page.match(/className="pigment-wipe/g)?.length, 2);
+  assert.match(page, /clipPath: underworldClip/);
+  assert.match(page, /style=\{\{ scale: ithacaScale \}\}/);
+  assert.match(css, /\.scene-stage\s*\{[\s\S]*position: sticky/);
+  assert.match(css, /@keyframes hero-line-in/);
+  assert.match(css, /\.pigment-wipe \{ display: none; \}/);
+});

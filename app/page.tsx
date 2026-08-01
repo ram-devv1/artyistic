@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CopyCommand } from "@/components/copy-command";
 
@@ -19,6 +19,25 @@ export default function Home() {
   const underworldRef = useRef<HTMLElement>(null);
   const ithacaRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
+  const [activeChapter, setActiveChapter] = useState("troy");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActiveChapter(entry.target.id);
+        }
+      },
+      { rootMargin: "-38% 0px -52% 0px" },
+    );
+
+    for (const id of chapters.map(([, , href]) => href.slice(1))) {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const hero = useScroll({ target: heroRef, offset: ["start start", "end start"] }).scrollYProgress;
   const sea = useScroll({ target: seaRef, offset: ["start end", "end start"] }).scrollYProgress;
@@ -30,8 +49,21 @@ export default function Home() {
   const heroCopyY = useTransform(hero, [0, 0.8], ["0%", reducedMotion ? "0%" : "-18%"]);
   const heroCopyOpacity = useTransform(hero, [0, 0.72], [1, reducedMotion ? 1 : 0]);
   const seaY = useTransform(sea, [0, 1], [reducedMotion ? "0%" : "-5%", reducedMotion ? "0%" : "5%"]);
+  const seaScale = useTransform(sea, [0, 0.48, 1], [reducedMotion ? 1 : 1.055, 1, reducedMotion ? 1 : 1.025]);
   const underworldY = useTransform(underworld, [0, 1], [reducedMotion ? "0%" : "-4%", reducedMotion ? "0%" : "4%"]);
-  const ithacaScale = useTransform(ithaca, [0, 1], [1.08, reducedMotion ? 1.08 : 1]);
+  const underworldClip = useTransform(
+    underworld,
+    [0, 0.25, 0.7, 1],
+    reducedMotion
+      ? ["inset(0%)", "inset(0%)", "inset(0%)", "inset(0%)"]
+      : ["inset(9% 7%)", "inset(0%)", "inset(0%)", "inset(4% 2%)"],
+  );
+  const underworldCopyY = useTransform(underworld, [0, 0.35, 1], [reducedMotion ? "0%" : "9%", "0%", reducedMotion ? "0%" : "-8%"]);
+  const underworldWipe = useTransform(underworld, [0, 0.1, 0.3, 1], [1, 1, reducedMotion ? 1 : 0, reducedMotion ? 1 : 0]);
+  const ithacaScale = useTransform(ithaca, [0, 1], [reducedMotion ? 1 : 1.08, 1]);
+  const ithacaCopyY = useTransform(ithaca, [0, 0.45, 1], [reducedMotion ? "0%" : "10%", "0%", reducedMotion ? "0%" : "-6%"]);
+  const ithacaLightOpacity = useTransform(ithaca, [0, 0.48, 0.9], reducedMotion ? [0.38, 0.38, 0.38] : [0.9, 0.38, 0.08]);
+  const ithacaWipe = useTransform(ithaca, [0, 0.12, 0.32, 1], [1, 1, reducedMotion ? 1 : 0, reducedMotion ? 1 : 0]);
 
   return (
     <>
@@ -43,7 +75,12 @@ export default function Home() {
         </a>
         <nav aria-label="Journey chapters">
           {chapters.map(([number, label, href]) => (
-            <a key={href} href={href}><span>{number}</span>{label}</a>
+            <a
+              key={href}
+              href={href}
+              data-active={activeChapter === href.slice(1)}
+              aria-current={activeChapter === href.slice(1) ? "true" : undefined}
+            ><span>{number}</span>{label}</a>
           ))}
         </nav>
       </header>
@@ -80,7 +117,7 @@ export default function Home() {
             <h2 id="sea-title">Twelve ships left Troy.<br /><em>One came home.</em></h2>
             <p>Command is measured by the men who remain—and by the names the survivor must continue to remember.</p>
           </div>
-          <div className="sea-canvas">
+          <motion.div className="sea-canvas" style={{ scale: seaScale }}>
             <motion.div className="sea-canvas__image" style={{ y: seaY }}>
               <Image
                 src="/assets/odysseus-sea-master.webp"
@@ -93,51 +130,57 @@ export default function Home() {
             <div className="sea-canvas__edge" />
             <p className="painting-note painting-note--top">The burden of the mast</p>
             <p className="painting-note painting-note--bottom">Responsibility becomes another form of grief.</p>
-          </div>
+          </motion.div>
           <p className="margin-script" aria-hidden="true">polytropos · the man of many turns</p>
         </section>
 
         <section ref={underworldRef} id="underworld" className="act act--underworld" aria-labelledby="underworld-title">
-          <motion.div className="underworld-art" style={{ y: underworldY }}>
-            <Image
-              src="/assets/odysseus-underworld-master.webp"
-              alt="Odysseus guards a blood offering as Tiresias and the shades gather at the edge of the underworld"
-              fill
-              sizes="100vw"
-              className="painting"
-            />
-          </motion.div>
-          <div className="underworld-veil" />
-          <div className="underworld-copy">
-            <p className="chapter-mark">The house of the dead · XI</p>
-            <h2 id="underworld-title">Before the dead can speak,<br /><em>they must remember.</em></h2>
-            <p>Here victory has no language. His mother, his men, and the prophet wait at the edge of the blood. The road home passes through everyone he failed to bring with him.</p>
-          </div>
-          <div className="underworld-aside" aria-label="Emotional register">
-            <span>grief</span><span>duty</span><span>fear</span><span>memory</span>
+          <div className="scene-stage">
+            <motion.div className="underworld-art" style={{ y: underworldY, clipPath: underworldClip }}>
+              <Image
+                src="/assets/odysseus-underworld-master.webp"
+                alt="Odysseus guards a blood offering as Tiresias and the shades gather at the edge of the underworld"
+                fill
+                sizes="100vw"
+                className="painting"
+              />
+            </motion.div>
+            <div className="underworld-veil" />
+            <motion.div className="underworld-copy" style={{ y: underworldCopyY }}>
+              <p className="chapter-mark">The house of the dead · XI</p>
+              <h2 id="underworld-title">Before the dead can speak,<br /><em>they must remember.</em></h2>
+              <p>Here victory has no language. His mother, his men, and the prophet wait at the edge of the blood. The road home passes through everyone he failed to bring with him.</p>
+            </motion.div>
+            <div className="underworld-aside" aria-label="Emotional register">
+              <span>grief</span><span>duty</span><span>fear</span><span>memory</span>
+            </div>
+            <motion.div aria-hidden="true" className="pigment-wipe pigment-wipe--blood" style={{ scaleY: underworldWipe }} />
           </div>
         </section>
 
         <section ref={ithacaRef} id="ithaca" className="act act--ithaca" aria-labelledby="ithaca-title">
-          <motion.div className="ithaca-art" style={{ scale: ithacaScale }}>
-            <Image
-              src="/assets/odysseus-ithaca-master.webp"
-              alt="The old dog Argos recognizes the disguised Odysseus while Penelope waits beside her loom in their Ithacan home"
-              fill
-              sizes="100vw"
-              className="painting"
-            />
-          </motion.div>
-          <div className="ithaca-light" />
-          <div className="ithaca-copy">
-            <p className="chapter-mark">Recognition · XVII–XXIII</p>
-            <h2 id="ithaca-title">Home does not know him<br /><em>all at once.</em></h2>
-            <p>The dog knows. The scar knows. The bow knows. Penelope waits for the one memory no impostor can possess.</p>
-          </div>
-          <div className="recognition-notes" aria-label="The signs of recognition">
-            <p><b>Argos</b><span>The first witness</span></p>
-            <p><b>The bow</b><span>The body remembers</span></p>
-            <p><b>The olive bed</b><span>The marriage holds</span></p>
+          <div className="scene-stage">
+            <motion.div className="ithaca-art" style={{ scale: ithacaScale }}>
+              <Image
+                src="/assets/odysseus-ithaca-master.webp"
+                alt="The old dog Argos recognizes the disguised Odysseus while Penelope waits beside her loom in their Ithacan home"
+                fill
+                sizes="100vw"
+                className="painting"
+              />
+            </motion.div>
+            <motion.div className="ithaca-light" style={{ opacity: ithacaLightOpacity }} />
+            <motion.div className="ithaca-copy" style={{ y: ithacaCopyY }}>
+              <p className="chapter-mark">Recognition · XVII–XXIII</p>
+              <h2 id="ithaca-title">Home does not know him<br /><em>all at once.</em></h2>
+              <p>The dog knows. The scar knows. The bow knows. Penelope waits for the one memory no impostor can possess.</p>
+            </motion.div>
+            <div className="recognition-notes" aria-label="The signs of recognition">
+              <p><b>Argos</b><span>The first witness</span></p>
+              <p><b>The bow</b><span>The body remembers</span></p>
+              <p><b>The olive bed</b><span>The marriage holds</span></p>
+            </div>
+            <motion.div aria-hidden="true" className="pigment-wipe pigment-wipe--ash" style={{ scaleY: ithacaWipe }} />
           </div>
         </section>
 

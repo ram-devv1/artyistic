@@ -107,6 +107,7 @@ p { text-wrap: pretty; }
 .site-header nav { display: flex; gap: clamp(0.8rem, 2.2vw, 2.7rem); }
 
 .site-header nav a {
+  position: relative;
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -118,6 +119,22 @@ p { text-wrap: pretty; }
 
 .site-header nav a span { color: var(--ember); font-size: 0.58rem; }
 .site-header nav a:hover { color: var(--paper); }
+
+.site-header nav a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.45rem;
+  left: 0;
+  height: 1px;
+  background: var(--paper);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 240ms ease;
+}
+
+.site-header nav a[data-active="true"] { color: var(--paper); }
+.site-header nav a[data-active="true"]::after { transform: scaleX(1); }
 
 .painting {
   object-fit: cover;
@@ -167,6 +184,13 @@ p { text-wrap: pretty; }
   transform: translateY(-50%);
   will-change: transform, opacity;
 }
+
+.hero__copy > * {
+  animation: hero-line-in 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero__copy > :nth-child(2) { animation-delay: 90ms; }
+.hero__copy > :nth-child(3) { animation-delay: 180ms; }
 
 .hero__copy .chapter-mark { margin-bottom: 1.4rem; color: rgba(215, 208, 191, 0.65); }
 
@@ -305,6 +329,8 @@ p { text-wrap: pretty; }
   overflow: hidden;
   background: #171711;
   box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.35);
+  transform-origin: 54% center;
+  will-change: transform;
 }
 
 .sea-canvas__image { position: absolute; inset: -6% 0; will-change: transform; }
@@ -344,14 +370,22 @@ p { text-wrap: pretty; }
 }
 
 .act--underworld {
-  min-height: 115dvh;
+  min-height: 158dvh;
   background: #0a0908;
+}
+
+.scene-stage {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .underworld-art {
   position: absolute;
   inset: -5% 0;
-  will-change: transform;
+  will-change: transform, clip-path;
 }
 
 .underworld-art .painting { object-position: center; }
@@ -398,7 +432,7 @@ p { text-wrap: pretty; }
 .underworld-aside span::before { content: "·"; margin-right: 0.7rem; color: var(--ember); }
 
 .act--ithaca {
-  min-height: 112dvh;
+  min-height: 152dvh;
   background: #181611;
 }
 
@@ -461,6 +495,43 @@ p { text-wrap: pretty; }
 .recognition-notes p:last-child { border-right: 0; }
 .recognition-notes b { display: block; font-family: var(--font-serif), serif; font-size: 1.35rem; font-weight: 400; }
 .recognition-notes span { color: rgba(215, 208, 191, 0.6); font-family: var(--font-mono), monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.pigment-wipe {
+  position: absolute;
+  z-index: 8;
+  inset: -2%;
+  pointer-events: none;
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.pigment-wipe::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -3rem;
+  left: 0;
+  height: 5rem;
+  background: linear-gradient(to bottom, currentColor, transparent);
+  filter: blur(12px);
+  opacity: 0.72;
+}
+
+.pigment-wipe--blood {
+  color: #1d0d0a;
+  background:
+    radial-gradient(circle at 18% 90%, rgba(122, 41, 26, 0.44), transparent 27%),
+    radial-gradient(circle at 74% 72%, rgba(91, 31, 24, 0.34), transparent 24%),
+    #090807;
+}
+
+.pigment-wipe--ash {
+  color: #17150f;
+  background:
+    radial-gradient(circle at 24% 84%, rgba(104, 123, 112, 0.2), transparent 25%),
+    radial-gradient(circle at 78% 76%, rgba(168, 70, 46, 0.18), transparent 30%),
+    #0c0b08;
+}
 
 .invocation {
   position: relative;
@@ -577,6 +648,11 @@ footer a {
   75% { transform: translate3d(1%, 1%, 0); }
 }
 
+@keyframes hero-line-in {
+  from { opacity: 0; transform: translate3d(0, 2rem, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
 @media (max-width: 900px) {
   .site-header nav a { font-size: 0; gap: 0; }
   .site-header nav a span { font-size: 0.62rem; }
@@ -613,7 +689,7 @@ footer a {
   .painting-note--top { top: 0.8rem; right: 0.8rem; }
   .painting-note--bottom { right: 0.8rem; bottom: 0.8rem; left: 0.8rem; }
   .margin-script { display: none; }
-  .act--underworld { min-height: 100svh; }
+  .act--underworld { min-height: 138svh; }
   .underworld-art { inset: 0 -62% 0 -16%; }
   .underworld-art .painting { object-position: 42% center; }
   .underworld-veil { background: linear-gradient(0deg, rgba(8, 7, 6, 0.94), rgba(8, 7, 6, 0.14) 74%, rgba(8, 7, 6, 0.42)); }
@@ -621,7 +697,7 @@ footer a {
   .underworld-copy > p:last-child { max-width: 30rem; font-size: 0.96rem; }
   .underworld-aside { right: 1.25rem; bottom: 1.1rem; left: 1.25rem; justify-content: space-between; gap: 0.4rem; }
   .underworld-aside span::before { display: none; }
-  .act--ithaca { min-height: 108svh; }
+  .act--ithaca { min-height: 138svh; }
   .ithaca-art { inset: 0 -74% 0 -30%; }
   .ithaca-art .painting { object-position: 48% center; }
   .ithaca-light { background: linear-gradient(0deg, rgba(9, 9, 7, 0.95), transparent 72%, rgba(9, 9, 7, 0.5)); }
@@ -650,4 +726,6 @@ footer a {
     transition-duration: 0.01ms !important;
   }
   .grain { animation: none; }
+  .hero__copy > * { animation: none; }
+  .pigment-wipe { display: none; }
 }
