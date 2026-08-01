@@ -162,6 +162,15 @@ test("the layout wires the reduced-motion-safe motion foundation", async () => {
 });
 
 test("the visual system keeps its motion and input affordance contracts", () => {
+  const rootRule = extractBlock(stylesheet, ":root");
+  for (const token of ["dur-1", "dur-2", "dur-3", "dur-4", "ease-enter", "ease-exit", "stagger", "rise", "clip-reveal"]) {
+    assert.match(rootRule, new RegExp(`--${token}\\s*:`), `missing --${token} motion token`);
+  }
+
+  for (const keyframe of ["rise-in", "mask-in", "clip-in", "draw-line", "grain-flicker", "ticker-scroll", "wave-drift", "bow-tension", "caret-blink", "arrow-slide"]) {
+    assert.match(stylesheet, new RegExp(`@keyframes\\s+${keyframe}\\b`), `missing ${keyframe} keyframes`);
+  }
+
   const htmlRule = extractBlock(stylesheet, "html");
   assert.match(htmlRule, /overflow-x\s*:\s*(?:hidden|clip)\b/i);
 
@@ -194,15 +203,21 @@ test("the visual system keeps its motion and input affordance contracts", () => 
 
   const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
   const rules = [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+  const reducedMotionFor = (target) => rules
+    .filter(([, selectors]) => selectors.split(",").map((selector) => selector.trim()).includes(target))
+    .map(([, , declarations]) => declarations)
+    .join("\n");
 
-  for (const target of [".voyage-line", ".bow-string"]) {
-    assert.ok(
-      rules.some(([, selectors, declarations]) =>
-        selectors.split(",").map((selector) => selector.trim()).includes(target)
-        && /\banimation(?:-name)?\s*:\s*none\b/i.test(declarations)),
-      `${target} must disable animation for reduced motion`,
-    );
+  for (const target of [".voyage-line", ".bow-string", ".grain", ".ticker", ".sea-wave", ".stat", ".rv", ".rv-line", ".rv-clip", ".rv-stagger > *"]) {
+    const finalState = reducedMotionFor(target);
+    assert.match(finalState, /\banimation(?:-name)?\s*:\s*none\b/i, `${target} must disable animation for reduced motion`);
+    assert.match(finalState, /\btransform\s*:\s*none\b/i, `${target} must remove transforms for reduced motion`);
   }
+
+  for (const target of [".stat", ".rv", ".rv-stagger > *"]) {
+    assert.match(reducedMotionFor(target), /\bopacity\s*:\s*1\b/i, `${target} must remain visible for reduced motion`);
+  }
+  assert.match(reducedMotionFor(".rv-clip"), /\bclip-path\s*:\s*inset\(0\)/i, ".rv-clip must reveal its full content for reduced motion");
 });
 
 test("the mobile layout keeps recognition art and primary navigation visible", () => {

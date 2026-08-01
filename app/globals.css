@@ -11,6 +11,15 @@
   --bronze: #806230;
   --glint: #c8b16a;
   --rule: rgba(216, 204, 180, 0.16);
+  --dur-1: 180ms;
+  --dur-2: 320ms;
+  --dur-3: 560ms;
+  --dur-4: 900ms;
+  --ease-enter: cubic-bezier(0.22, 1.15, 0.36, 1);
+  --ease-exit: cubic-bezier(0.64, 0, 0.78, 0);
+  --stagger: 70ms;
+  --rise: 1.5rem;
+  --clip-reveal: inset(0 0 100% 0);
 }
 
 @theme inline {
@@ -80,6 +89,120 @@ p {
 :focus-visible {
   outline: 2px solid var(--glint) !important;
   outline-offset: 4px !important;
+}
+
+.grain {
+  inset: -10%;
+  animation: grain-flicker var(--dur-4) steps(2, end) infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.scroll-progress {
+  pointer-events: none;
+  will-change: transform;
+}
+
+.rv,
+.rv-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, var(--rise), 0);
+}
+
+.rv-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.rv-clip {
+  clip-path: var(--clip-reveal);
+}
+
+.rv-stagger > * {
+  animation-delay: calc(var(--rv-index, 0) * var(--stagger));
+}
+
+.rv-stagger > :nth-child(2) { --rv-index: 1; }
+.rv-stagger > :nth-child(3) { --rv-index: 2; }
+.rv-stagger > :nth-child(4) { --rv-index: 3; }
+.rv-stagger > :nth-child(5) { --rv-index: 4; }
+.rv-stagger > :nth-child(6) { --rv-index: 5; }
+
+.ticker {
+  width: max-content;
+  animation: ticker-scroll 36s linear infinite;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.sea-wave {
+  animation: wave-drift 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.stat {
+  opacity: 0;
+  transform: translate3d(0, var(--rise), 0);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--rise), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mask-in {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(0); }
+}
+
+@keyframes clip-in {
+  from { clip-path: var(--clip-reveal); }
+  to { clip-path: inset(0); }
+}
+
+@keyframes draw-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes grain-flicker {
+  0%,
+  100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(-1%, 1%, 0); }
+  50% { transform: translate3d(1%, -1%, 0); }
+  75% { transform: translate3d(1%, 1%, 0); }
+}
+
+@keyframes ticker-scroll {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes wave-drift {
+  from { transform: translate3d(-1%, 0, 0) scaleX(1); }
+  to { transform: translate3d(1%, 0, 0) scaleX(1.03); }
+}
+
+@keyframes bow-tension {
+  0%,
+  58% { transform: translateX(-1.5rem) scaleY(0.94); }
+  76% { transform: translateX(0.2rem) scaleY(1.01); }
+  100% { transform: translateX(0) scaleY(1); }
+}
+
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes arrow-slide {
+  50% { transform: translate3d(0.25rem, 0, 0); }
 }
 
 header {
@@ -220,7 +343,7 @@ footer > div {
   background: center / 100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 80' preserveAspectRatio='none'%3E%3Cpath d='M0 58 L118 28 L232 56 L354 17 L474 48 L608 24 L800 44' fill='none' stroke='%2366877e' stroke-width='2' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
   transform: scaleX(0);
   transform-origin: left center;
-  animation: voyage-path-draw linear both;
+  animation: draw-line linear both;
   animation-timeline: view();
   animation-range: entry 12% cover 42%;
 }
@@ -232,12 +355,6 @@ footer > div {
   right: 0;
   pointer-events: none;
   opacity: 0.72;
-}
-
-@keyframes voyage-path-draw {
-  to {
-    transform: scaleX(1);
-  }
 }
 
 #sea ol {
@@ -396,7 +513,7 @@ footer p {
   background: var(--bone);
   transform: translateX(-1.5rem) scaleY(0.94);
   transform-origin: center;
-  animation: bowstring-tension ease-out both;
+  animation: bow-tension ease-out both;
   animation-timeline: view();
   animation-range: entry 10% cover 58%;
 }
@@ -460,19 +577,6 @@ footer p {
   border: 1px solid var(--bronze);
   border-radius: 50%;
   background: var(--hull);
-}
-
-@keyframes bowstring-tension {
-  0%,
-  58% {
-    transform: translateX(-1.5rem) scaleY(0.94);
-  }
-  76% {
-    transform: translateX(0.2rem) scaleY(1.01);
-  }
-  100% {
-    transform: translateX(0) scaleY(1);
-  }
 }
 
 .copy-button {
@@ -612,8 +716,27 @@ footer > div > p:first-child,
   .voyage-line,
   #sea::after,
   .bow-string,
-  #invoke::before {
+  #invoke::before,
+  .grain,
+  .ticker,
+  .sea-wave,
+  .stat,
+  .rv,
+  .rv-line,
+  .rv-clip,
+  .rv-stagger > * {
     animation: none;
     transform: none;
+    will-change: auto;
+  }
+
+  .stat,
+  .rv,
+  .rv-stagger > * {
+    opacity: 1;
+  }
+
+  .rv-clip {
+    clip-path: inset(0);
   }
 }
