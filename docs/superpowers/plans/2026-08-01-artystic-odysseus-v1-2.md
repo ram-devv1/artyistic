@@ -108,11 +108,11 @@ skills/artystic/
 - Test consumes: package.json deps, layout providers, and asserts the reduced-motion + provenance contracts before assets/motion exist.
 
 **Steps:**
-- [ ] **Step 1:** `bun add motion lenis`. Verify versions land at `^12` and `^1`.
-- [ ] **Step 2:** Create `motion-provider.tsx` (`"use client"`, wraps `children` in `<MotionConfig reducedMotion="user">`), `lenis-provider.tsx` (uses `matchMedia("(prefers-reduced-motion: reduce)")`; if reduced, render children only), `scroll-progress.tsx` (motion `useScroll` → `scaleX` spring on a fixed top bar using the brick/glint tokens), and `grain.tsx` (fixed, pointer-events-none, low opacity, z-index above content but below header interactions).
-- [ ] **Step 3:** Wire providers into `app/layout.tsx` between `<body>` and `{children}`.
-- [ ] **Step 4:** Add test assertions that: `package.json` contains `motion` and `lenis`; layout imports `MotionConfig` with `reducedMotion`; page still has six sections, all ids, all named characters, all three asset paths and alt texts; provenance manifest is schema v3 with `thirdPartyVisualPixels: true` and per-object credits; `motion-language.md` and `imagery-language.md` exist with tokens and reduced-motion rules; `odysseus.md` contains a per-act motion table and no longer says "exactly two meaningful motion moments". Run `node --test tests/odysseus-homepage.test.mjs` and confirm failures are exactly the new contracts.
-- [ ] **Step 5:** Run `bun run check` and confirm the only errors are from the new files (typecheck will pass after providers are typed).
+- [x] **Step 1:** `bun add motion lenis`. Verify versions land at `^12` and `^1`.
+- [x] **Step 2:** Create `motion-provider.tsx` (`"use client"`, wraps `children` in `<MotionConfig reducedMotion="user">`), `lenis-provider.tsx` (uses `matchMedia("(prefers-reduced-motion: reduce)")`; if reduced, render children only), `scroll-progress.tsx` (motion `useScroll` → `scaleX` spring on a fixed top bar using the brick/glint tokens), and `grain.tsx` (fixed, pointer-events-none, low opacity, z-index above content but below header interactions).
+- [x] **Step 3:** Wire providers into `app/layout.tsx` between `<body>` and `{children}`.
+- [x] **Step 4:** Add test assertions that: `package.json` contains `motion` and `lenis`; layout imports `MotionConfig` with `reducedMotion`; page still has six sections, all ids, all named characters, all three asset paths and alt texts; provenance manifest is schema v3 with `thirdPartyVisualPixels: true` and per-object credits; `motion-language.md` and `imagery-language.md` exist with tokens and reduced-motion rules; `odysseus.md` contains a per-act motion table and no longer says "exactly two meaningful motion moments". Run `node --test tests/odysseus-homepage.test.mjs` and confirm failures are exactly the new contracts.
+- [x] **Step 5:** Run `bun run check` and confirm the only errors are from the new files (typecheck will pass after providers are typed).
 
 **Done when:** providers compile, tests fail on new contracts only, deps are recorded.
 
@@ -133,13 +133,13 @@ skills/artystic/
 - Manifest consumes: script output object records; produces the schema v3 JSON the tests assert.
 
 **Steps:**
-- [ ] **Step 1:** Write `scripts/build-collages.sh` with helpers: `met_search "query"` → `curl https://collectionapi.metmuseum.org/public/collection/v1/search?q=...&hasImages=true`; `met_object <id>` → fetch object JSON and require `isPublicDomain === true`; `met_download <id>` → `curl` the `primaryImage` URL into `.assetwork/raw/`. Add `.assetwork/` to `.gitignore`.
-- [ ] **Step 2: Hero (Troy / the long departure).** Search terms: `mycenaean octopus jar`, `cypriot boat model`, `mycenaean ship`. Compose a dark ground (text-safe left third, near-black `#0a0e10`), octopus-jar motif cropped tight on the right, a low ship-model silhouette on the horizon line, one thin oxidized route polyline (SVG overlay composited in), one muted brick accent chip. Tone: desaturate, level, slight blue-black tint. Export 1915x821 or 2000x900, quality ~80, sRGB, strip metadata.
-- [ ] **Step 3: Underworld (the dead speak).** Search terms: `white-ground lekythos`, `lekythos funerary`. Compose 2-3 hard-cropped lekythos figure fragments stacked vertically and fading toward the top (memory fragments), a single strong brick/red horizontal rule at the lower third (blood offering line), cold desaturated tone. Export 1536x1024.
-- [ ] **Step 4: Homecoming (Argos / recognition).** Search terms: `odysseus penelope relief`, `odysseus archer`, `athena owl lekythos`, `owl skyphos`. Compose a three-panel editorial row: the pair/relief crop, an archer vase detail, an owl detail, separated by thin rule lines; warm bone-on-charcoal duotone. Export 1536x1024.
-- [ ] **Step 5:** Inspect every intermediate and final at full size and at ~360px thumbnail. Reject: cutout halos, muddy AI-gradients, text in image, wrong aspect, >400KB payload, colors outside the token palette.
-- [ ] **Step 6:** Write the v3 manifest: `provenance.mode: "curated public-domain collage"`, `thirdPartyVisualPixels: true`, `filmAssets: false`, disclosure sentence, and for each asset a `compositionNote` plus `objects[]` with `title`, `accessionNumber`, `objectDate`, `culture`, `creditLine`, `sourceUrl`, `license: "CC0"`. Match the test contract from Task 1.
-- [ ] **Step 7:** Run the test suite; provenance assertions must pass.
+- [x] **Step 1:** Write `scripts/build-collages.sh` with helpers: `met_search "query"` → `curl https://collectionapi.metmuseum.org/public/collection/v1/search?q=...&hasImages=true`; `met_object <id>` → fetch object JSON and require `isPublicDomain === true`; `met_download <id>` → `curl` the `primaryImage` URL into `.assetwork/raw/`. Add `.assetwork/` to `.gitignore`.
+- [x] **Step 2: Hero (Troy / the long departure).** Search terms: `mycenaean octopus jar`, `cypriot boat model`, `mycenaean ship`. Compose a dark ground (text-safe left third, near-black `#0a0e10`), octopus-jar motif cropped tight on the right, a low ship-model silhouette on the horizon line, one thin oxidized route polyline (SVG overlay composited in), one muted brick accent chip. Tone: desaturate, level, slight blue-black tint. Export 1915x821 or 2000x900, quality ~80, sRGB, strip metadata.
+- [x] **Step 3: Underworld (the dead speak).** Search terms: `white-ground lekythos`, `lekythos funerary`. Compose 2-3 hard-cropped lekythos figure fragments stacked vertically and fading toward the top (memory fragments), a single strong brick/red horizontal rule at the lower third (blood offering line), cold desaturated tone. Export 1536x1024.
+- [x] **Step 4: Homecoming (Argos / recognition).** Search terms: `odysseus penelope relief`, `odysseus archer`, `athena owl lekythos`, `owl skyphos`. Compose a three-panel editorial row: the pair/relief crop, an archer vase detail, an owl detail, separated by thin rule lines; warm bone-on-charcoal duotone. Export 1536x1024.
+- [x] **Step 5:** Inspect every intermediate and final at full size and at ~360px thumbnail. Reject: cutout halos, muddy AI-gradients, text in image, wrong aspect, >400KB payload, colors outside the token palette.
+- [x] **Step 6:** Write the v3 manifest: `provenance.mode: "curated public-domain collage"`, `thirdPartyVisualPixels: true`, `filmAssets: false`, disclosure sentence, and for each asset a `compositionNote` plus `objects[]` with `title`, `accessionNumber`, `objectDate`, `culture`, `creditLine`, `sourceUrl`, `license: "CC0"`. Match the test contract from Task 1.
+- [x] **Step 7:** Run the test suite; provenance assertions must pass.
 
 **Done when:** all three tableaus are verifiable collages of credited CC0 objects, the script re-runs cleanly from scratch, and the manifest test passes.
 
@@ -157,12 +157,12 @@ skills/artystic/
 - Page consumes: providers from Task 1 and class hooks like `data-reveal="rise"`, `.ticker`, `.sea-wave`, `.stat`.
 
 **Steps:**
-- [ ] **Step 1:** Add motion tokens to `:root` and a small keyframe library: `rise-in`, `mask-in`, `clip-in`, `draw-line`, `grain-flicker`, `ticker-scroll`, `wave-drift`, `bow-tension`, `caret-blink`, `arrow-slide`.
-- [ ] **Step 2:** Global layers: fixed grain overlay (from `grain.tsx`), scroll progress bar (from Task 1), selection/focus tokens unchanged, keep all v1.1 color and type tokens.
-- [ ] **Step 3:** Add reveal utilities: `.rv` (motion-managed entrance; opacity 0 + transform prefixed), `.rv-line`, `.rv-clip` (clip-path inset), `.rv-stagger > *` (children stagger). These are the CSS final-state fallbacks; the `motion` components animate them on view.
-- [ ] **Step 4:** Add the `.ticker` marquee (chapter names between acts) and `.sea-wave` ambient SVG motion, both with `prefers-reduced-motion: reduce` → `animation: none; transform: none`.
-- [ ] **Step 5:** Add `@media (prefers-reduced-motion: reduce)` block covering every animated class and the old `.voyage-line` / `.bow-string` so the existing test contract keeps passing, plus `.grain`, `.ticker`, `.sea-wave`, `.stat`.
-- [ ] **Step 6:** Run `bun run check` and `node --test`. The reduced-motion contract test must pass.
+- [x] **Step 1:** Add motion tokens to `:root` and a small keyframe library: `rise-in`, `mask-in`, `clip-in`, `draw-line`, `grain-flicker`, `ticker-scroll`, `wave-drift`, `bow-tension`, `caret-blink`, `arrow-slide`.
+- [x] **Step 2:** Global layers: fixed grain overlay (from `grain.tsx`), scroll progress bar (from Task 1), selection/focus tokens unchanged, keep all v1.1 color and type tokens.
+- [x] **Step 3:** Add reveal utilities: `.rv` (motion-managed entrance; opacity 0 + transform prefixed), `.rv-line`, `.rv-clip` (clip-path inset), `.rv-stagger > *` (children stagger). These are the CSS final-state fallbacks; the `motion` components animate them on view.
+- [x] **Step 4:** Add the `.ticker` marquee (chapter names between acts) and `.sea-wave` ambient SVG motion, both with `prefers-reduced-motion: reduce` → `animation: none; transform: none`.
+- [x] **Step 5:** Add `@media (prefers-reduced-motion: reduce)` block covering every animated class and the old `.voyage-line` / `.bow-string` so the existing test contract keeps passing, plus `.grain`, `.ticker`, `.sea-wave`, `.stat`.
+- [x] **Step 6:** Run `bun run check` and `node --test`. The reduced-motion contract test must pass.
 
 **Done when:** tokens and primitives exist, reduced-motion test passes, no visual changes yet beyond grain + progress bar.
 
@@ -179,11 +179,11 @@ skills/artystic/
 - CSS consumes: `.hero-word` (mask spans), `.hero-plate` (Ken Burns), `.hero-fade` (scroll-linked opacity), `.voyage-index a` hover animations.
 
 **Steps:**
-- [ ] **Step 1:** Title reveal: split "The Long Return" into three mask-reveal lines with `motion.span` translateY overshoot, staggered 90ms, ease-out overshoot pair. Reduced motion: lines visible immediately.
-- [ ] **Step 2:** Background plate: slow Ken Burns zoom (CSS, 18-24s loop, alternate) plus scroll-linked parallax (image translateY slower than scroll) and a scroll fade of the whole content column.
-- [ ] **Step 3:** CTA: arrow `→` slides right on hover; underline sweep under "Invoke the theme"; `journey-meta` chip gets a subtle rule draw on hover.
-- [ ] **Step 4:** Voyage index (`Ash / Loss / Cunning / Shades / Signs / Peace`): each link gets an animated top-border draw on hover, underline sweep, and a small chevron micro-motion; first link has an ongoing brick "you are here" marker.
-- [ ] **Step 5:** Keep the dark text-safe field; verify hero still passes the v1.1 CSS contract tests (opacity, object-position, min-height, voyage index background).
+- [x] **Step 1:** Title reveal: split "The Long Return" into three mask-reveal lines with `motion.span` translateY overshoot, staggered 90ms, ease-out overshoot pair. Reduced motion: lines visible immediately.
+- [x] **Step 2:** Background plate: slow Ken Burns zoom (CSS, 18-24s loop, alternate) plus scroll-linked parallax (image translateY slower than scroll) and a scroll fade of the whole content column.
+- [x] **Step 3:** CTA: arrow `→` slides right on hover; underline sweep under "Invoke the theme"; `journey-meta` chip gets a subtle rule draw on hover.
+- [x] **Step 4:** Voyage index (`Ash / Loss / Cunning / Shades / Signs / Peace`): each link gets an animated top-border draw on hover, underline sweep, and a small chevron micro-motion; first link has an ongoing brick "you are here" marker.
+- [x] **Step 5:** Keep the dark text-safe field; verify hero still passes the v1.1 CSS contract tests (opacity, object-position, min-height, voyage index background).
 
 **Done when:** hero feels alive on scroll and hover, still reads as "The Long Return" within 2 seconds of load, reduced motion shows a static plate + full title.
 
@@ -200,12 +200,12 @@ skills/artystic/
 - CSS consumes: `.draw-line`, `.rv-clip`, `.rv-stagger`, existing `.voyage-line` / `.bow-string` classes.
 
 **Steps:**
-- [ ] **Step 1: `#sea` (The cost of return).** Headline mask reveal; keep the voyage route path-draw; add a small ship marker traveling the path with `offset-path` when in view; list items (`Troy`, `The cave`, `Almost home`, `Six taken`, `One hull`, `One survivor`) rise staggered with their accent label and a rule draw. Hover: item shifts 4px, label colors brick, a thin vertical rule extends.
-- [ ] **Step 2: `#cunning` (Every escape leaves a mark).** Four articles reveal in an alternating diagonal stagger (`rgv` alternating `x` offsets) with border-left color line drawing in; hover lifts the card 4px and draws the h3 underline.
-- [ ] **Step 3: `#memory` (The dead speak).** Underworld image parallax inside its `overflow-hidden` frame (image scale 1.08, translateY on scroll); text column reveals line-by-line; the two articles (`Achilles`, `Agamemnon`) get staggered rise with top-rule draw. Keep the current dark `--char` band.
-- [ ] **Step 4: `#recognition` (Home arrives as a sequence of signs).** Homecoming plate reveals with `clip-path: inset(0 0 0 100% → 0)` sweep; the three signs (`The old dog knows first`, `The body keeps its name`, `The bed cannot be moved`) stagger in with index numerals counting up; weave-pattern background drifts subtly on scroll.
-- [ ] **Step 5:** Insert one `.ticker` marquee between acts (e.g., `Troy / The cave / Almost home / Six taken / One hull / One survivor / Ithaca`) running at a calm 30-40s loop, `aria-hidden`, paused under reduced motion.
-- [ ] **Step 6:** Re-run `node --test`; the mobile tests (recognition grid collapse, axe register 12 columns, compact nav) must still pass.
+- [x] **Step 1: `#sea` (The cost of return).** Headline mask reveal; keep the voyage route path-draw; add a small ship marker traveling the path with `offset-path` when in view; list items (`Troy`, `The cave`, `Almost home`, `Six taken`, `One hull`, `One survivor`) rise staggered with their accent label and a rule draw. Hover: item shifts 4px, label colors brick, a thin vertical rule extends.
+- [x] **Step 2: `#cunning` (Every escape leaves a mark).** Four articles reveal in an alternating diagonal stagger (`rgv` alternating `x` offsets) with border-left color line drawing in; hover lifts the card 4px and draws the h3 underline.
+- [x] **Step 3: `#memory` (The dead speak).** Underworld image parallax inside its `overflow-hidden` frame (image scale 1.08, translateY on scroll); text column reveals line-by-line; the two articles (`Achilles`, `Agamemnon`) get staggered rise with top-rule draw. Keep the current dark `--char` band.
+- [x] **Step 4: `#recognition` (Home arrives as a sequence of signs).** Homecoming plate reveals with `clip-path: inset(0 0 0 100% → 0)` sweep; the three signs (`The old dog knows first`, `The body keeps its name`, `The bed cannot be moved`) stagger in with index numerals counting up; weave-pattern background drifts subtly on scroll.
+- [x] **Step 5:** Insert one `.ticker` marquee between acts (e.g., `Troy / The cave / Almost home / Six taken / One hull / One survivor / Ithaca`) running at a calm 30-40s loop, `aria-hidden`, paused under reduced motion.
+- [x] **Step 6:** Re-run `node --test`; the mobile tests (recognition grid collapse, axe register 12 columns, compact nav) must still pass.
 
 **Done when:** every section has a distinct, narrative motion moment; no two sections animate identically; reduced motion shows all final states.
 
@@ -223,12 +223,12 @@ skills/artystic/
 - CSS consumes: `.axe-aperture` stagger, `.stat`, `.caret`, `.bow-string` (keep v1.1 contract), `.copy-button` success state.
 
 **Steps:**
-- [ ] **Step 1:** Bowstring: keep the v1.1 tension draw; add a slow shimmer pass (glint gradient sweep) once in view. Keep `.bow-string` reduced-motion contract.
-- [ ] **Step 2:** Axe apertures: 12 apertures stagger down into place with a top-rule draw (60ms stagger), final alignment identical to v1.1.
-- [ ] **Step 3:** Add a stats row that counts up in view: `20 years absent`, `12 axes`, `6 taken`, `1 ship returns`. `motion` `useInView` triggers `animate(0 → n)`; reduced motion shows final numbers immediately.
-- [ ] **Step 4:** Command block: caret blinking after `npx artystic`; `CopyCommand` success flips to a brick check with a tiny pop; button border sweeps on hover.
-- [ ] **Step 5:** Footer: source-boundary text fades up on view; link hover underlines. Keep the three source-boundary phrases (test contract).
-- [ ] **Step 6:** Re-run the full test suite; the invoke section contract (12 apertures, no overflow pre, CopyCommand) must pass.
+- [x] **Step 1:** Bowstring: keep the v1.1 tension draw; add a slow shimmer pass (glint gradient sweep) once in view. Keep `.bow-string` reduced-motion contract.
+- [x] **Step 2:** Axe apertures: 12 apertures stagger down into place with a top-rule draw (60ms stagger), final alignment identical to v1.1.
+- [x] **Step 3:** Add a stats row that counts up in view: `20 years absent`, `12 axes`, `6 taken`, `1 ship returns`. `motion` `useInView` triggers `animate(0 → n)`; reduced motion shows final numbers immediately.
+- [x] **Step 4:** Command block: caret blinking after `npx artystic`; `CopyCommand` success flips to a brick check with a tiny pop; button border sweeps on hover.
+- [x] **Step 5:** Footer: source-boundary text fades up on view; link hover underlines. Keep the three source-boundary phrases (test contract).
+- [x] **Step 6:** Re-run the full test suite; the invoke section contract (12 apertures, no overflow pre, CopyCommand) must pass.
 
 **Done when:** invocation reads as the climax, stats count, copy feedback is delightful, all tests green.
 
@@ -249,11 +249,11 @@ skills/artystic/
 - Test consumes: the exact route phrase, the new reference files, the per-act motion table, the collage provenance rules.
 
 **Steps:**
-- [ ] **Step 1:** Write `motion-language.md` and `imagery-language.md` per the Part A specs (tokens, recipes, package policy, sourcing checklist, manifest schema v3).
-- [ ] **Step 2:** Rewrite `odysseus.md`: keep narrative/acts/palette/type and the four source-boundary layers; replace the two-motion budget with the per-act motion moment table; add the three tableau contracts referencing `imagery-language.md`; update refusal rules and completion checklist.
-- [ ] **Step 3:** Update `SKILL.md` routing to require shared-language reads for motion/imagery tasks; update refusals (allow motion runtimes with discipline; still refuse AI-generated editorial pixels and copied film assets).
-- [ ] **Step 4:** Update `agents/openai.yaml` default prompt to commission authored collages and layered narrative motion.
-- [ ] **Step 5:** Run `node --test tests/odysseus-homepage.test.mjs`; the skill contract tests from Task 1 must pass. Run `quick_validate.py skills/artystic` if the validator exists in the environment.
+- [x] **Step 1:** Write `motion-language.md` and `imagery-language.md` per the Part A specs (tokens, recipes, package policy, sourcing checklist, manifest schema v3).
+- [x] **Step 2:** Rewrite `odysseus.md`: keep narrative/acts/palette/type and the four source-boundary layers; replace the two-motion budget with the per-act motion moment table; add the three tableau contracts referencing `imagery-language.md`; update refusal rules and completion checklist.
+- [x] **Step 3:** Update `SKILL.md` routing to require shared-language reads for motion/imagery tasks; update refusals (allow motion runtimes with discipline; still refuse AI-generated editorial pixels and copied film assets).
+- [x] **Step 4:** Update `agents/openai.yaml` default prompt to commission authored collages and layered narrative motion.
+- [x] **Step 5:** Run `node --test tests/odysseus-homepage.test.mjs`; the skill contract tests from Task 1 must pass. Run `quick_validate.py skills/artystic` if the validator exists in the environment.
 
 **Done when:** skill tree matches Part A exactly and tests pass.
 
@@ -268,12 +268,12 @@ skills/artystic/
 - Produces: verified desktop/mobile page, clean checks, passing tests, production build.
 
 **Steps:**
-- [ ] **Step 1:** Run `bun run check`, `node --test tests/odysseus-homepage.test.mjs`, `bun run build`.
-- [ ] **Step 2:** Visual pass at 1440px and 390px: hero readability, every reveal firing once, no horizontal overflow, no layout shift (reserve media space), parallax not clipping text, ticker not covering focus targets, stats legible.
-- [ ] **Step 3:** Reduced-motion pass: emulate `prefers-reduced-motion: reduce`; confirm Lenis off, no grain flicker, no ticker drift, all content visible with no animation required to read it.
-- [ ] **Step 4:** Keyboard + screen-reader pass: tab order intact, focus rings visible on every interactive element, alt text preserved, aria-hidden on decorative motion (ticker, grain, axe apertures), CopyCommand announces state.
-- [ ] **Step 5:** Performance pass: total image payload under ~1MB across the three tableaus, animation-only properties (transform/opacity), no jank on a mid laptop (this repo's target).
-- [ ] **Step 6:** Run all checks again after any fixes.
+- [x] **Step 1:** Run `bun run check`, `node --test tests/odysseus-homepage.test.mjs`, `bun run build`.
+- [x] **Step 2:** Visual pass at 1440px and 390px: hero readability, every reveal firing once, no horizontal overflow, no layout shift (reserve media space), parallax not clipping text, ticker not covering focus targets, stats legible.
+- [x] **Step 3:** Reduced-motion pass: emulate `prefers-reduced-motion: reduce`; confirm Lenis off, no grain flicker, no ticker drift, all content visible with no animation required to read it.
+- [x] **Step 4:** Keyboard + screen-reader pass: tab order intact, focus rings visible on every interactive element, alt text preserved, aria-hidden on decorative motion (ticker, grain, axe apertures), CopyCommand announces state.
+- [x] **Step 5:** Performance pass: total image payload under ~1MB across the three tableaus, animation-only properties (transform/opacity), no jank on a mid laptop (this repo's target).
+- [x] **Step 6:** Run all checks again after any fixes.
 
 **Done when:** everything above passes twice, with the same commands.
 
@@ -288,9 +288,9 @@ skills/artystic/
 - Create: `docs/superpowers/plans/2026-08-01-artystic-odysseus-v1-2.md` already exists (this file); update the plan's task checkboxes to `[x]` as tasks complete
 
 **Steps:**
-- [ ] **Step 1:** Bump version, update README stack and feature lists (motion system, archival collages, provenance manifest).
-- [ ] **Step 2:** Full `bun run check`, `node --test`, `bun run build` on the final tree.
-- [ ] **Step 3:** Commit on `codex/odysseus-v1.2` and tag `v1.2.0`. Do not push without a separate request.
+- [x] **Step 1:** Bump version, update README stack and feature lists (motion system, archival collages, provenance manifest).
+- [x] **Step 2:** Full `bun run check`, `node --test`, `bun run build` on the final tree.
+- [x] **Step 3:** Commit on `codex/odysseus-v1.2` and tag `v1.2.0`. Do not push without a separate request.
 
 ---
 

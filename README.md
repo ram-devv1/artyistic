@@ -10,6 +10,12 @@ It ships as:
 
 Artystic is a cross-agent design-polish skill for pages that already work but still feel generic. It is tailored for GPT 5.5 and works cleanly across Pi, Codex, Claude Code, Cursor, OpenCode, and other skill-compatible coding agents. It pushes toward stronger visual subject matter, fewer sharper containers, mixed typography with clear roles, meaningful image plates, and restrained motion that guides attention.
 
+## v1.2: The Long Return
+
+The Odysseus homepage now pairs layered narrative motion with three public-domain archival collages. Motion for React drives section choreography, Lenis provides inertial scrolling, and native CSS handles ambient effects with complete reduced-motion states.
+
+The collage pipeline records schema-v3 provenance in `public/assets/odysseus-sources.json`. Reusable motion and imagery contracts live in `skills/artystic/references/motion-language.md` and `skills/artystic/references/imagery-language.md` so future Artystic themes can use the same source and interaction discipline.
+
 ## How to use it
 
 ### Install
@@ -39,12 +45,18 @@ It is designed for cross-agent use, including:
 ## Project structure
 
 ```text
-app/                  Next.js app router pages and global styles
-components/           Shared UI components
-bin/artystic.mjs      CLI entrypoint
-skills/artystic/      Bundled Pi skill
-public/assets/        Image plates and visual assets
+app/                              Next.js pages, layout, motion provider, and styles
+components/                       Motion, smooth-scroll, grain, and UI components
+public/assets/                    Archival collages and schema-v3 provenance
+scripts/build-collages.sh         Reproducible public-domain collage pipeline
+skills/artystic/SKILL.md          Bundled cross-agent skill router
+skills/artystic/references/       Odysseus, motion, and imagery contracts
+bin/artystic.mjs                  CLI entrypoint
 ```
+
+## Stack
+
+Next.js 16, React 19, TypeScript, Tailwind CSS v4, Motion for React, Lenis, native CSS animation, Next Image, and ImageMagick.
 
 ## Repository
 
