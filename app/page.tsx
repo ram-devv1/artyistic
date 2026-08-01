@@ -1,261 +1,166 @@
-import { ArrowLongRightIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
 import { CopyCommand } from "@/components/copy-command";
-import { VisualPlate } from "@/components/visual-plate";
-
-const fieldCities = ["Toronto", "Berlin", "Tokyo", "Shanghai", "London", "Lisbon", "New York", "São Paulo", "Singapore", "Dubai"];
-
-function Nav() {
-  return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#05050a]/72 py-5 font-[var(--font-mono)] text-[0.66rem] uppercase tracking-[0.24em] text-white/45 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <a href="#top" className="flex items-center gap-3 text-white/76 hover:text-[#c6a9ff]">
-          <span className="relative h-9 w-9 overflow-hidden rounded-full border border-white/10 bg-white/[0.02]">
-            <Image src="/assets/artystic-logo.png" alt="Artystic logo" fill className="object-cover" sizes="36px" />
-          </span>
-          <span>Artystic / Skill</span>
-        </a>
-        <nav className="flex items-center gap-5">
-          <a href="#field" className="hover:text-[#c6a9ff]">Field</a>
-          <a href="#method" className="hover:text-[#c6a9ff]">Method</a>
-          <a href="#proof" className="hover:text-[#c6a9ff]">Proof</a>
-          <a href="#install" className="hover:text-[#c6a9ff]">Install</a>
-          <a href="https://github.com/Bram-cat/artyistic" className="pixel-button inline-flex items-center gap-2 border border-[#9b5cff]/55 px-3 py-2 text-[#c6a9ff]">
-            <span className="pixel-text">
-              <span className="pixel-text__sizer">Star · 0.1K</span>
-              <span className="pixel-text__label">Star · 0.1K</span>
-            </span>
-            <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
-          </a>
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-function SourceItem({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="border-t border-white/10 pt-4">
-      <p className="font-[var(--font-mono)] text-[0.62rem] uppercase tracking-[0.24em] text-[#ff9a6f]">— {label}</p>
-      <p className="mt-3 truncate text-lg font-semibold tracking-[-0.04em] text-white/86">{value}</p>
-    </div>
-  );
-}
-
-function Rule({ number, title, body }: { number: string; title: string; body: string }) {
-  return (
-    <article className="reveal border-t border-white/10 pt-5">
-      <p className="font-[var(--font-mono)] text-[0.66rem] uppercase tracking-[0.24em] text-[#ff9a6f]">{number}</p>
-      <h3 className="mt-4 text-2xl font-semibold tracking-[-0.06em] text-white">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-white/62">{body}</p>
-    </article>
-  );
-}
-
-function IssueHeader({ numeral, title, meta }: { numeral: string; title: string; meta: string }) {
-  return (
-    <div className="reveal flex items-center justify-between border-t border-white/10 pt-8 font-[var(--font-mono)] text-[0.72rem] uppercase tracking-[0.24em] text-white/42">
-      <span className="serif-hit text-2xl tracking-[-0.04em] text-[#ff9a6f]">{numeral}</span>
-      <span>{title}</span>
-      <span>{meta}</span>
-    </div>
-  );
-}
-
-function PromptLine({ label, body }: { label: string; body: string }) {
-  return (
-    <div className="grid gap-3 border-t border-white/10 py-5 md:grid-cols-[0.28fr_0.72fr]">
-      <p className="font-[var(--font-mono)] text-[0.66rem] uppercase tracking-[0.22em] text-[#ff9a6f]">{label}</p>
-      <p className="text-lg leading-8 tracking-[-0.035em] text-white/78">{body}</p>
-    </div>
-  );
-}
 
 export default function Home() {
   return (
-    <main id="top" className="relative min-h-screen pb-16">
-      <Nav />
+    <>
+      <header className="sticky top-0 z-30 border-b border-[#D8CCB4]/10 bg-[#090D0F]/90 font-[var(--font-mono)] text-[0.68rem] uppercase tracking-[0.2em] text-[#D8CCB4]/70 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
+          <a href="#journey" className="flex min-h-11 shrink-0 items-center text-[#D8CCB4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8B16A]">
+            Artystic <span className="px-2 text-[#A24A31]">/</span> Odysseus
+          </a>
+          <nav aria-label="Primary navigation" className="ml-auto flex min-w-0 items-center gap-5 overflow-x-auto">
+            <a href="#journey" className="flex min-h-11 shrink-0 items-center hover:text-[#C8B16A]">Journey</a>
+            <a href="#memory" className="flex min-h-11 shrink-0 items-center hover:text-[#C8B16A]">Memory</a>
+            <a href="#recognition" className="flex min-h-11 shrink-0 items-center hover:text-[#C8B16A]">Recognition</a>
+            <a href="#invoke" className="flex min-h-11 shrink-0 items-center hover:text-[#C8B16A]">Invoke</a>
+          </nav>
+        </div>
+      </header>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:px-8">
-        <div className="hero-copy space-y-8 lg:sticky lg:top-28 lg:self-start">
-          <div className="space-y-5">
-            <p className="kicker">Design-polish skill · authored interfaces</p>
-            <h1 className="max-w-4xl text-6xl font-semibold leading-[0.86] tracking-[-0.105em] text-white sm:text-7xl lg:text-[7.4rem]">
-              Make it feel <span className="serif-hit text-[#c6a9ff]">authored.</span>
+      <main className="min-h-screen bg-[#090D0F] text-[#D8CCB4]">
+        <section id="journey" aria-labelledby="journey-title" className="relative isolate min-h-[calc(100svh-2.75rem)] overflow-hidden border-b border-[#D8CCB4]/10">
+          <Image
+            src="/assets/odysseus-hero.webp"
+            alt="Storm-dark Aegean voyage collage tracing the long return to Ithaca"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-70"
+          />
+          <div className="absolute inset-0 -z-0 bg-[linear-gradient(90deg,rgba(9,13,15,0.98)_0%,rgba(9,13,15,0.74)_45%,rgba(9,13,15,0.18)_100%)]" />
+          <div className="relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+            <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.28em] text-[#C8B16A]">Odysseus · Νόστος</p>
+            <h1 id="journey-title" className="mt-5 max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
+              The Long Return
             </h1>
-            <p className="max-w-xl text-lg leading-8 text-white/68">
-              Artystic is a cross-agent design-polish skill tailored for GPT 5.5 and built to travel across Pi, Codex, Claude Code, Cursor, and other skills-compatible coding agents.
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#D8CCB4]/78 sm:text-xl">
+              Odysseus leaves a burning victory behind and carries the dead across ten more years of sea. He survives, but survival does not leave him innocent, whole, or finished.
             </p>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <a href="#install" className="pixel-button inline-flex items-center gap-2 border border-[#9b5cff]/60 px-5 py-3 text-sm font-semibold text-[#c6a9ff]">
-              <span className="pixel-text">
-                <span className="pixel-text__sizer">Use npx artystic</span>
-                <span className="pixel-text__label">Use npx artystic</span>
-              </span>{" "}<ArrowLongRightIcon className="h-4 w-4" />
-            </a>
-            <a href="#method" className="pixel-button inline-flex items-center gap-2 border border-white/12 px-5 py-3 text-sm font-semibold text-white/72">
-              <span className="pixel-text">
-                <span className="pixel-text__sizer">Read method</span>
-                <span className="pixel-text__label">Read method</span>
-              </span>
-            </a>
-          </div>
-
-          <div className="border-t border-white/10 pt-5">
-            <p className="max-w-lg text-sm leading-7 text-white/54">
-              Use the skill when a route feels competent but anonymous. It audits the visual subject, cuts filler, assigns type roles, and replaces placeholder art with proof plates.
-            </p>
-          </div>
-        </div>
-
-        <VisualPlate index="Fig. 01" eyebrow="Hero plate" title="Images carry meaning" asset="/assets/artystic-hero.png" priority variant="hero" />
-      </section>
-
-      <section id="field" className="border-y border-white/10 py-10">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.22fr_0.78fr] lg:px-8">
-          <div className="reveal flex items-center gap-5">
-            <span className="grid h-10 w-10 place-items-center rounded-full border border-white/14 text-[#ff9a6f]">•</span>
-            <div>
-              <p className="font-[var(--font-mono)] text-sm font-semibold uppercase tracking-[0.22em] text-white">From the field</p>
-              <p className="mt-2 font-[var(--font-mono)] text-[0.68rem] uppercase tracking-[0.22em] text-white/42">Screens · prompts · proof plates</p>
+            <div className="mt-8 flex flex-wrap items-center gap-5">
+              <a href="#invoke" className="inline-flex min-h-12 items-center border border-[#A24A31] bg-[#A24A31] px-5 font-semibold text-[#090D0F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8B16A]">
+                Invoke the theme <span aria-hidden="true" className="ml-3">→</span>
+              </a>
+              <span className="font-[var(--font-mono)] text-xs uppercase tracking-[0.22em] text-[#D8CCB4]/55">20 years absent · one ship returns</span>
             </div>
+            <nav aria-label="Odysseus voyage index" className="mt-12 border-t border-[#D8CCB4]/20 pt-5">
+              <ol className="grid gap-3 font-[var(--font-mono)] text-[0.65rem] uppercase tracking-[0.18em] text-[#D8CCB4]/58 sm:grid-cols-3 lg:grid-cols-6">
+                <li><a href="#journey">Ash</a></li>
+                <li><a href="#sea">Loss</a></li>
+                <li><a href="#cunning">Cunning</a></li>
+                <li><a href="#memory">Shades</a></li>
+                <li><a href="#recognition">Signs</a></li>
+                <li><a href="#invoke">Peace</a></li>
+              </ol>
+            </nav>
           </div>
-          <div className="reveal overflow-hidden border-l border-white/10 py-3 pl-8">
-            <div className="flex min-w-max animate-[marquee_28s_linear_infinite] gap-8 font-[var(--font-mono)] text-sm uppercase tracking-[0.2em] text-white/58">
-              {[...fieldCities, ...fieldCities].map((city, index) => (
-                <span key={`${city}-${index}`}><span className="text-[#c6a9ff]">{city}</span> · {12 + index} critiques</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="mx-auto grid max-w-7xl gap-10 border-b border-white/10 px-4 py-16 sm:px-6 lg:grid-cols-[0.46fr_0.54fr] lg:px-8">
-        <VisualPlate index="Plate 01.5" eyebrow="Field map" title="Source has gravity" asset="/assets/artystic-field-map.png" />
-        <div className="reveal space-y-10 self-center">
-          <div className="grid gap-5 border-y border-white/10 py-6 md:grid-cols-[0.35fr_0.65fr]">
-            <p className="font-[var(--font-mono)] text-sm uppercase tracking-[0.24em] text-white/52">Theme target · Nº 00</p>
-            <div>
-              <h2 className="text-4xl font-semibold leading-none tracking-[-0.075em] text-white sm:text-5xl">
-                Dark editorial <span className="serif-hit text-[#c6a9ff]">design system</span> for websites that need aura.
-              </h2>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-white/62">
-                Artystic is tailored for GPT 5.5 and built for cross-agent use across Pi, Codex, Claude Code, Cursor, OpenCode, and other coding-agent surfaces that should feel like Open Design, Midjourney, Locomotive, creative tooling launches, AI design labs, agent skill pages, portfolios, and products where visual taste is part of the product.
+        <section id="sea" aria-labelledby="sea-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-8 lg:grid-cols-[0.38fr_0.62fr]">
+              <h2 id="sea-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] text-[#D8CCB4] sm:text-7xl">The cost of return</h2>
+              <p className="max-w-3xl text-xl leading-9 text-[#D8CCB4]/72">
+                The voyage is not a catalogue of monsters. It is a register of decisions, warnings ignored, men lost, and a horizon that repeatedly lets Ithaca appear before taking it away.
               </p>
             </div>
+            <ol className="mt-14 grid border-y border-[#D8CCB4]/15 sm:grid-cols-2 lg:grid-cols-3">
+              <li className="border-b border-[#D8CCB4]/15 p-6 sm:border-r lg:border-b"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">Troy</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">Smoke, looted bronze, and victory already curdling into absence.</p></li>
+              <li className="border-b border-[#D8CCB4]/15 p-6 lg:border-b"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">The cave</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">“Nobody” saves the crew; a revealed name gives Poseidon the route home.</p></li>
+              <li className="border-b border-[#D8CCB4]/15 p-6 sm:border-r lg:border-r-0"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">Almost home</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">Ithaca enters sight. The wind-bag opens while its captain sleeps.</p></li>
+              <li className="border-b border-[#D8CCB4]/15 p-6 lg:border-b-0 lg:border-r"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">Six taken</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">At Scylla, command becomes the choice of who cannot be saved.</p></li>
+              <li className="border-b border-[#D8CCB4]/15 p-6 sm:border-b-0 sm:border-r"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">One hull</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">The Laestrygonians empty the fleet until only his black ship remains.</p></li>
+              <li className="p-6"><span className="font-[var(--font-mono)] text-xs text-[#C8B16A]">One survivor</span><p className="mt-3 leading-7 text-[#D8CCB4]/66">After Helios, every oar bench is silent except the one memory must fill.</p></li>
+            </ol>
           </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            <SourceItem label="Perk 01" value="Kills template smell" />
-            <SourceItem label="Perk 02" value="Turns images into proof" />
-            <SourceItem label="Perk 03" value="Assigns type roles" />
-            <SourceItem label="Perk 04" value="Adds restrained motion" />
-            <SourceItem label="Perk 05" value="Cuts filler sections" />
-            <SourceItem label="Command" value="npx artystic" />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="method" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <IssueHeader numeral="I." title="About / manifesto" meta="002 / 008" />
-        <div className="mt-12 grid gap-10 lg:grid-cols-[0.82fr_1.18fr]">
-          <div className="reveal lg:sticky lg:top-28 lg:self-start">
-            <p className="kicker">Method</p>
-            <h2 className="mt-4 text-4xl font-semibold leading-none tracking-[-0.075em] text-white sm:text-6xl">
-              Polish by <span className="serif-hit text-[#ff9a6f]">decisions</span>, not decoration.
-            </h2>
+        <section id="cunning" aria-labelledby="cunning-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
+            <h2 id="cunning-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">Every escape leaves a mark</h2>
+            <div className="grid gap-px bg-[#D8CCB4]/15 sm:grid-cols-2">
+              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Name / eye / ram</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Nobody survives the cave</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">Odysseus hides beneath wool, then pride makes him name himself across the water.</p></article>
+              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Cup / root / oath</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Circe suspends the year</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">A cup changes bodies; moly, a blade, and an oath restore them. Survival remains negotiation.</p></article>
+              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Mast / rope / song</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Desire is given a boundary</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">He hears the Sirens bound upright while the crew rows past with sealed ears.</p></article>
+              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Scylla / Charybdis</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Cunning cannot save everyone</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">His intelligence is practical and violent: it preserves the vessel by accepting six deaths.</p></article>
+            </div>
           </div>
-          <div className="grid gap-8 sm:grid-cols-2">
-            <Rule number="01" title="Type has roles" body="Sans sets structure, mono handles metadata, serif/italic lands the emotional word. Do not make every phrase feel equal." />
-            <Rule number="02" title="Images must earn space" body="Every plate needs content: artifact, signal, product truth, or atmosphere. No empty right-side filler." />
-            <Rule number="03" title="Containers stay rare" body="Prefer fewer, stronger blocks. Remove support rows and stat chips when one sentence is clearer." />
-            <Rule number="04" title="Motion has restraint" body="Use premium scroll reveals, sticky staging, and gentle image lift. Motion should guide attention, not perform." />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <IssueHeader numeral="II." title="Capabilities / design gates" meta="003 / 008" />
-        <div className="mt-12 grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
-          <VisualPlate index="Plate 05" eyebrow="Capabilities" title="Gates before pixels" asset="/assets/artystic-capabilities.png" />
-          <div className="grid gap-8 sm:grid-cols-2">
-            <Rule number="Audit" title="Find the template smell" body="Detect same-font hierarchy, card-grid reflexes, fake editorial labels, and image containers that mean nothing." />
-            <Rule number="Shape" title="Lock visual direction" body="Define the scene, palette strategy, type roles, asset slots, motion personality, and what the page must refuse." />
-            <Rule number="Polish" title="Cut until it lands" body="Remove redundant copy, swap filled CTAs for restraint, strengthen the hero, and make every block earn its footprint." />
-            <Rule number="Compat" title="Travel across agents" body="Tailored for GPT 5.5, but shaped to install and read cleanly in Pi, Codex, Claude Code, Cursor, OpenCode, and other skills-compatible agent setups." />
-          </div>
-        </div>
-      </section>
-
-      <section id="proof" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <IssueHeader numeral="III." title="Proof plates / generated assets" meta="004 / 008" />
-        <div className="mt-12 grid gap-8 lg:grid-cols-3">
-          <VisualPlate index="Plate 02" eyebrow="Type system" title="Words get weight" asset="/assets/artystic-type.png" />
-          <VisualPlate index="Plate 03" eyebrow="Composition" title="Less but sharper" asset="/assets/artystic-composition.png" />
-          <VisualPlate index="Plate 04" eyebrow="Visual proof" title="Artifact over chrome" asset="/assets/artystic-artifact.png" />
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <IssueHeader numeral="IV." title="Prompt refinery / image direction" meta="005 / 008" />
-        <div className="mt-12 grid gap-10 lg:grid-cols-[0.55fr_0.45fr]">
-          <div className="reveal space-y-8">
-            <h2 className="text-5xl font-semibold leading-none tracking-[-0.085em] text-white sm:text-7xl">
-              Thin prompts make <span className="serif-hit text-[#c6a9ff]">thin images.</span>
-            </h2>
-            <VisualPlate index="Plate 06" eyebrow="Prompt system" title="Direction before output" asset="/assets/artystic-prompt-refinery.png" />
-          </div>
-          <div className="reveal">
-            <PromptLine label="Subject" body="Name the artifact, not just the mood. A plate needs a protagonist." />
-            <PromptLine label="Composition" body="Declare negative space, density, crop, and where the object cluster lives." />
-            <PromptLine label="Texture" body="Use material words: vellum, porcelain, graphite, dust, beam, glass, paper." />
-            <PromptLine label="Negative" body="Forbid readable text, logos, UI chrome, watermarks, and generic neon gradients." />
-          </div>
-        </div>
-      </section>
-
-      <section id="install" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <IssueHeader numeral="V." title="Install / command surface" meta="006 / 008" />
-        <div className="mt-12 grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
-          <div className="reveal">
-            <p className="kicker">Install</p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-[-0.075em] text-white sm:text-6xl">
-              Run <span className="serif-hit text-[#c6a9ff]">npx artystic</span>
-            </h2>
-          </div>
-          <div className="grid gap-6 lg:grid-cols-[0.7fr_0.3fr]">
-            <div className="plate reveal p-6">
-              <p className="font-[var(--font-mono)] text-[0.66rem] uppercase tracking-[0.24em] text-white/44">install</p>
-              <pre className="mt-4 overflow-x-auto text-2xl font-semibold tracking-[-0.04em] text-[#c6a9ff]"><code>npx artystic</code></pre>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <CopyCommand command="npx artystic" />
-                <a href="https://github.com/Bram-cat/artyistic" className="pixel-button inline-flex items-center gap-2 border border-white/12 px-5 py-3 text-sm font-semibold text-white/72">
-                  <span className="pixel-text">
-                    <span className="pixel-text__sizer">Repository</span>
-                    <span className="pixel-text__label">Repository</span>
-                  </span>{" "}<ArrowTopRightOnSquareIcon className="h-4 w-4" />
-                </a>
+        <section id="memory" aria-labelledby="memory-title" className="border-b border-[#D8CCB4]/10">
+          <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
+            <div className="relative min-h-[32rem] overflow-hidden lg:min-h-[48rem]">
+              <Image
+                src="/assets/odysseus-underworld.webp"
+                alt="Underworld remembrance collage of sacrifice, memory, and counsel"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="px-4 py-16 sm:px-10 lg:px-16 lg:py-24">
+              <h2 id="memory-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">The dead speak</h2>
+              <p className="mt-7 text-lg leading-8 text-[#D8CCB4]/70">The underworld belongs to Odysseus’s reckoning. The war’s famous kings enter only as shadows inside his return.</p>
+              <div className="mt-10 space-y-8">
+                <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Achilles rejects dead glory</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">His answer strips victory of its polish: life without rank would be worth more than rule among shades.</p></article>
+                <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl text-[#D8CCB4]">Agamemnon warns of the door</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">A king can reach home and still be murdered there. Odysseus learns to return concealed.</p></article>
               </div>
-              <p className="mt-5 text-sm leading-7 text-white/62">
-                This repo includes <code className="text-[#c6a9ff]">skills/artystic/SKILL.md</code> and a CLI entry at <code className="text-[#c6a9ff]">bin/artystic.mjs</code>.
-              </p>
             </div>
-            <VisualPlate index="Plate 07" eyebrow="Command" title="Copy then run" asset="/assets/artystic-command-surface.png" />
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <IssueHeader numeral="VI." title="Frequently asked / no fluff" meta="007 / 008" />
-        <div className="mt-12 divide-y divide-white/10 border-y border-white/10">
-          <PromptLine label="01" body="Is Artystic a theme? No. It is a critique and polishing discipline that can produce many themes." />
-          <PromptLine label="02" body="Does it copy Open Design? No. It borrows issue structure, metadata rhythm, and image-led proof, then uses its own palette and artifacts." />
-          <PromptLine label="03" body="When does it fail? When the page becomes a polished product template with decorative plates and identical cards." />
-          <PromptLine label="04" body="What should an agent do first? Cut copy, assign type roles, identify the visual subject, and replace filler images with meaningful assets." />
+        <section id="recognition" aria-labelledby="recognition-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-12 lg:grid-cols-[0.84fr_1.16fr] lg:items-end">
+              <div>
+                <h2 id="recognition-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">Home arrives as a sequence of signs</h2>
+                <p className="mt-7 max-w-xl text-lg leading-8 text-[#D8CCB4]/70">Athena folds him into mist and a beggar’s body. Recognition comes quietly, through witnesses that cannot be persuaded by a crown.</p>
+              </div>
+              <div className="relative min-h-[30rem] overflow-hidden border border-[#D8CCB4]/10">
+                <Image
+                  src="/assets/odysseus-homecoming.webp"
+                  alt="Ithaca recognition still life with mist, woven thread, and olive wood"
+                  fill
+                  sizes="(min-width: 1024px) 58vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <div className="mt-12 grid gap-8 md:grid-cols-3">
+              <article className="border-t border-[#D8CCB4]/15 pt-6"><p className="font-[var(--font-mono)] text-xs text-[#A24A31]">ARGOS / LOYALTY</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></article>
+              <article className="border-t border-[#D8CCB4]/15 pt-6"><p className="font-[var(--font-mono)] text-xs text-[#A24A31]">SCAR / TOUCH</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></article>
+              <article className="border-t border-[#D8CCB4]/15 pt-6"><p className="font-[var(--font-mono)] text-xs text-[#A24A31]">PENELOPE / ROOT</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section id="invoke" aria-labelledby="invoke-title" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+              <div>
+                <h2 id="invoke-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">String the bow. End the cycle.</h2>
+                <p className="mt-7 max-w-xl text-lg leading-8 text-[#D8CCB4]/70">The bow restores Odysseus’s name through violence. The olive-root bed restores the marriage through memory. Athena must still stop revenge from repeating itself.</p>
+              </div>
+              <div className="border-y border-[#D8CCB4]/20 py-8">
+                <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.24em] text-[#C8B16A]">Artystic theme command</p>
+                <pre className="mt-5 overflow-x-auto font-[var(--font-mono)] text-2xl text-[#D8CCB4] sm:text-4xl"><code>npx artystic</code></pre>
+                <div className="mt-7"><CopyCommand command="npx artystic" /></div>
+                <p className="mt-6 max-w-xl text-sm leading-7 text-[#D8CCB4]/58">Invoke <code className="text-[#C8B16A]">artystic odysseus</code> for the narrative, palette, typography, imagery, motion budget, and source boundaries of The Long Return.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-[#D8CCB4]/10 bg-[#090D0F] px-4 py-10 text-[#D8CCB4] sm:px-6 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[0.24fr_0.76fr]">
+          <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.24em] text-[#C8B16A]">Source boundary</p>
+          <p className="max-w-4xl text-sm leading-7 text-[#D8CCB4]/58">
+            Homeric material grounds the journey, losses, and recognitions. Later visual reception supplies distinct vase and object traditions; it is not Bronze Age documentary evidence. The survivor’s-guilt frame, cinematic scale, and this design are an original modern interpretation, not a diagnosis made by Homer or an archaeological reconstruction.
+          </p>
         </div>
-      </section>
-    </main>
+      </footer>
+    </>
   );
 }
