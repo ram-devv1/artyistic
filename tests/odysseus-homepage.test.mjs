@@ -216,6 +216,10 @@ test("the invocation climaxes with hydration-safe ambient life", () => {
   assert.match(stylesheet, /#invoke pre\s*\{[^}]*white-space\s*:\s*pre-wrap[^}]*overflow-wrap\s*:\s*anywhere/s);
 
   assert.match(copyCommand, /import \{ CheckIcon, ClipboardDocumentIcon \}/);
+  assert.match(copyCommand, /import \{ clearCopyReset, scheduleCopyReset \}/);
+  assert.match(copyCommand, /const resetTimer = useRef<ReturnType<typeof setTimeout> \| null>\(null\)/);
+  assert.match(copyCommand, /useEffect\(\(\) => \(\) => clearCopyReset\(resetTimer\), \[\]\)/);
+  assert.match(copyCommand, /scheduleCopyReset\(resetTimer, \(\) => setCopied\(false\)\)/);
   assert.match(copyCommand, /data-copied=\{copied\}/);
   assert.match(copyCommand, /copied \? <CheckIcon/);
   assert.match(stylesheet, /\.copy-button\[data-copied=["']true["']\]\s*\{[^}]*color\s*:\s*var\(--brick\)/s);
@@ -250,6 +254,9 @@ test("the invocation climaxes with hydration-safe ambient life", () => {
   for (const selector of ["bow-string-shimmer", "axe-aperture", "axe-register__rule", "invoke-command", "footer-source"]) {
     assert.doesNotMatch(baseStyles, new RegExp(`\\.${selector}\\s*\\{[^}]*\\bwill-change\\s*:`, "s"), `${selector} must not keep a permanent will-change hint`);
   }
+
+  const mobile = extractBlock(stylesheet, "@media (max-width: 767px)");
+  assert.match(mobile, /#invoke::before\s*,\s*#invoke::after\s*,\s*\.bow-string-shimmer\s*\{[^}]*display\s*:\s*none/s);
 });
 
 test("the middle acts have distinct reduced-motion-safe choreography", () => {

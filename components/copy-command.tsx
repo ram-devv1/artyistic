@@ -1,15 +1,20 @@
 "use client";
 
 import { CheckIcon, ClipboardDocumentIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { clearCopyReset, scheduleCopyReset } from "@/components/copy-reset-timer";
 
 export function CopyCommand({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
+  const resetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => clearCopyReset(resetTimer), []);
 
   async function copy() {
     await navigator.clipboard.writeText(command);
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    scheduleCopyReset(resetTimer, () => setCopied(false));
   }
 
   return (

@@ -1114,7 +1114,8 @@ footer a:hover {
   }
 
   #invoke::before,
-  #invoke::after {
+  #invoke::after,
+  .bow-string-shimmer {
     display: none;
   }
 
