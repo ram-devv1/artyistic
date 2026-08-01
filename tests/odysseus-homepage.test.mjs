@@ -60,7 +60,7 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.match(page, /The Long Return/);
   assert.equal(page.match(/<section\b/g)?.length, 6, "expected six narrative acts");
 
-  for (const id of ["journey", "memory", "recognition", "invoke"]) {
+  for (const id of ["journey", "sea", "cunning", "memory", "recognition", "invoke"]) {
     assert.match(page, new RegExp(`id=["']${id}["']`), `missing #${id}`);
   }
 
@@ -115,6 +115,49 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.match(layout, /IBM_Plex_Sans/);
   assert.match(layout, /IBM_Plex_Mono/);
   assert.match(layout, /The Long Return/);
+});
+
+test("the release package includes only the required motion runtimes", () => {
+  assert.deepEqual(Object.keys(packageJson.dependencies).sort(), [
+    "@heroicons/react",
+    "lenis",
+    "motion",
+    "next",
+    "react",
+    "react-dom",
+  ]);
+  assert.match(packageJson.dependencies.motion, /^\^12(?:\.|$)/);
+  assert.match(packageJson.dependencies.lenis, /^\^1(?:\.|$)/);
+});
+
+test("the layout wires the reduced-motion-safe motion foundation", async () => {
+  const [motionProvider, lenisProvider, scrollProgress, grain] = await Promise.all([
+    readFile(new URL("../app/motion-provider.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/lenis-provider.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/scroll-progress.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/grain.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(motionProvider, /import \{ MotionConfig \} from ["']motion\/react["']/);
+  assert.match(motionProvider, /<MotionConfig reducedMotion=["']user["']>/);
+  assert.match(lenisProvider, /matchMedia\(["']\(prefers-reduced-motion: reduce\)["']\)/);
+  assert.match(lenisProvider, /new Lenis\(/);
+  assert.match(lenisProvider, /requestAnimationFrame\(/);
+  assert.match(lenisProvider, /cancelAnimationFrame\(/);
+  assert.match(scrollProgress, /useScroll\(\)/);
+  assert.match(scrollProgress, /useSpring\(scrollYProgress,/);
+  assert.match(scrollProgress, /useReducedMotion\(\)/);
+  assert.match(scrollProgress, /style=\{\{ scaleX: reducedMotion \? scrollYProgress : scaleX \}\}/);
+  assert.match(scrollProgress, /var\(--brick\)/);
+  assert.match(scrollProgress, /var\(--glint\)/);
+  assert.doesNotMatch(grain, /use client/);
+  assert.match(grain, /feTurbulence/);
+  assert.match(grain, /pointer-events-none/);
+
+  for (const component of ["MotionProvider", "LenisProvider", "ScrollProgress", "Grain"]) {
+    assert.match(layout, new RegExp(`import \\{ ${component} \\}`), `layout must import ${component}`);
+    assert.match(layout, new RegExp(`<${component}`), `layout must render ${component}`);
+  }
 });
 
 test("the visual system keeps its motion and input affordance contracts", () => {
@@ -183,16 +226,59 @@ test("the narrative asset manifest records the production boundary", async () =>
     await readFile(new URL("../public/assets/odysseus-sources.json", import.meta.url), "utf8"),
   );
 
-  assert.equal(manifest.schemaVersion, 2);
-  assert.equal(manifest.provenance.mode, "AI-assisted original generation");
-  assert.equal(manifest.provenance.thirdPartyVisualPixels, false);
+  assert.equal(manifest.schemaVersion, 3);
+  assert.equal(manifest.provenance.mode, "curated public-domain collage");
+  assert.equal(manifest.provenance.thirdPartyVisualPixels, true);
   assert.equal(manifest.provenance.filmAssets, false);
   assert.equal(manifest.assets.length, 3, "expected one production record per narrative tableau");
 
   for (const asset of manifest.assets) {
     assert.match(asset.asset, /^\/assets\/odysseus-(?:hero|underworld|homecoming)\.webp$/);
-    assert.ok(asset.storyBeat && asset.artDirection && asset.historicalBoundary, `incomplete record for ${asset.asset}`);
+    assert.ok(asset.storyBeat && asset.compositionNote, `incomplete record for ${asset.asset}`);
+    assert.ok(Array.isArray(asset.objects) && asset.objects.length > 0, `missing credited source objects for ${asset.asset}`);
+    for (const object of asset.objects) {
+      for (const field of ["title", "accessionNumber", "objectDate", "culture", "creditLine", "sourceUrl"]) {
+        assert.ok(object[field], `missing ${field} for a source object in ${asset.asset}`);
+      }
+      assert.match(object.sourceUrl, /^https:\/\//);
+      assert.equal(object.license, "CC0");
+    }
     assert.ok(asset.output.width > 0 && asset.output.height > 0);
     assert.equal(asset.output.format, "WebP");
   }
+});
+
+test("the shared motion and imagery languages lock reusable contracts", async () => {
+  const [motionLanguage, imageryLanguage] = await Promise.all([
+    readFile(new URL("../skills/artystic/references/motion-language.md", import.meta.url), "utf8"),
+    readFile(new URL("../skills/artystic/references/imagery-language.md", import.meta.url), "utf8"),
+  ]);
+
+  for (const duration of [180, 320, 560, 900]) {
+    assert.match(motionLanguage, new RegExp(`\\b${duration}\\s*ms\\b`), `missing ${duration} ms motion token`);
+  }
+  assert.match(motionLanguage, /motion\/react/);
+  assert.match(motionLanguage, /lenis/i);
+  assert.match(motionLanguage, /MotionConfig[^\n]*reducedMotion=["'`]user["'`]/);
+  assert.match(motionLanguage, /prefers-reduced-motion/);
+
+  assert.match(imageryLanguage, /verified public-domain museum objects/i);
+  assert.match(imageryLanguage, /schema v3/i);
+  assert.match(imageryLanguage, /thirdPartyVisualPixels[^\n]*true/);
+  for (const field of ["title", "accessionNumber", "objectDate", "culture", "creditLine", "sourceUrl", "license"]) {
+    assert.match(imageryLanguage, new RegExp(`\\b${field}\\b`), `imagery schema must document ${field}`);
+  }
+});
+
+test("the Odysseus reference defines motion per act", async () => {
+  const reference = await readFile(new URL("../skills/artystic/references/odysseus.md", import.meta.url), "utf8");
+  const motionTable = reference.match(
+    /\|\s*Act\s*\|\s*Primary animation\s*\|\s*System used\s*\|\s*Reduced-motion final state\s*\|[\s\S]*?(?=\n## |$)/i,
+  )?.[0] ?? "";
+
+  assert.ok(motionTable, "missing per-act motion table");
+  for (const act of ["After Troy", "The sea takes the fleet", "Cunning under pressure", "The dead speak", "Ithaca does not recognize him", "The bow / the bed / peace"]) {
+    assert.match(motionTable, new RegExp(act.replaceAll("/", "\\/"), "i"), `missing motion contract for ${act}`);
+  }
+  assert.doesNotMatch(reference, /exactly two meaningful motion moments/i);
 });
