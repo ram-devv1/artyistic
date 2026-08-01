@@ -129,7 +129,7 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   assert.match(page, /const reducedMotion = useReducedMotion\(\)/);
   assert.doesNotMatch(page, /const staticHero(?:Y|Opacity)\b/);
   assert.match(journey, /style=\{\{ y: heroY \}\}/);
-  assert.match(journey, /style=\{\{ opacity: heroOpacity \}\}/);
+  assert.match(journey, /style=\{\{ ["']--hero-opacity["']: heroOpacity \} as MotionStyle\}/);
 
   assert.equal(journey.match(/className=["']hero-word["']/g)?.length, 3, "the title must have three mask lines");
   assert.equal(journey.match(/<motion\.span\b/g)?.length, 3, "each title line must use Motion");
@@ -145,6 +145,7 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   }
 
   assert.match(stylesheet, /\.hero-plate\s*\{[^}]*animation\s*:\s*hero-ken-burns\s+22s\s+ease-in-out\s+infinite\s+alternate/i);
+  assert.match(extractBlock(stylesheet, ".hero-fade"), /\bopacity\s*:\s*var\(--hero-opacity,\s*1\)/i);
   assert.match(stylesheet, /@keyframes\s+hero-ken-burns\b/);
   assert.match(stylesheet, /\.journey-cta:hover\s+\.journey-cta__arrow\s*\{/);
   assert.match(stylesheet, /\.journey-cta:hover\s+\.journey-cta__label::after\s*\{/);
@@ -173,7 +174,7 @@ test("page-level motion is hydration-safe and static for reduced motion", async 
 
   assert.match(reducedMotionFor(".scroll-progress"), /\btransform\s*:\s*scaleX\(1\)\s*!important\b/i, "reduced motion must keep progress static and complete");
   assert.match(reducedMotionFor(".hero-plate-wrap"), /\btransform\s*:\s*none\s*!important\b/i, "reduced motion must keep hero art passive");
-  assert.match(reducedMotionFor(".hero-fade"), /\bopacity\s*:\s*1\s*!important\b/i, "reduced motion must keep hero content visible");
+  assert.match(reducedMotionFor(".hero-fade"), /--hero-opacity\s*:\s*1\s*!important\b/i, "reduced motion must pin the hero fade to full opacity");
   assert.match(reducedMotionFor(".hero-word__line"), /\btransform\s*:\s*none\s*!important\b/i, "reduced motion must reveal every title line");
 });
 

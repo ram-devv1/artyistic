@@ -283,6 +283,10 @@ footer {
   pointer-events: none;
 }
 
+.hero-fade {
+  opacity: var(--hero-opacity, 1);
+}
+
 #journey > div.absolute.inset-0 {
   background: rgba(9, 13, 15, 0.1) !important;
 }
@@ -1026,7 +1030,7 @@ footer > div > p:first-child,
   }
 
   .hero-fade {
-    opacity: 1 !important;
+    --hero-opacity: 1 !important;
   }
 
   .scroll-progress {

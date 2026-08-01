@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { animate, motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
+import type { MotionStyle } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { CopyCommand } from "@/components/copy-command";
@@ -89,7 +90,7 @@ export default function Home() {
             />
           </motion.div>
           <div className="hero-shade absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(9,13,15,0.98)_0%,rgba(9,13,15,0.74)_45%,rgba(9,13,15,0.18)_100%)]" />
-          <motion.div className="hero-fade relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8" style={{ opacity: heroOpacity }}>
+          <motion.div className="hero-fade relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8" style={{ "--hero-opacity": heroOpacity } as MotionStyle}>
             <h1 id="journey-title" aria-label="The Long Return" className="max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
               <span className="hero-word" aria-hidden="true">
                 <motion.span
