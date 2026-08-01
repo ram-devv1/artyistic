@@ -147,7 +147,8 @@ test("the layout wires the reduced-motion-safe motion foundation", async () => {
   assert.match(scrollProgress, /useScroll\(\)/);
   assert.match(scrollProgress, /useSpring\(scrollYProgress,/);
   assert.match(scrollProgress, /useReducedMotion\(\)/);
-  assert.match(scrollProgress, /style=\{\{ scaleX: reducedMotion \? scrollYProgress : scaleX \}\}/);
+  assert.match(scrollProgress, /useMotionValue\(1\)/);
+  assert.match(scrollProgress, /style=\{\{ scaleX: reducedMotion \? finalScaleX : scaleX \}\}/);
   assert.match(scrollProgress, /var\(--brick\)/);
   assert.match(scrollProgress, /var\(--glint\)/);
   assert.doesNotMatch(grain, /use client/);
