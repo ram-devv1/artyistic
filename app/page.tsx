@@ -1,8 +1,23 @@
+"use client";
+
 import Image from "next/image";
+import { motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
 
 import { CopyCommand } from "@/components/copy-command";
 
 export default function Home() {
+  const heroRef = useRef<HTMLElement>(null);
+  const reducedMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.78], [1, 0]);
+  const staticHeroY = useMotionValue(0);
+  const staticHeroOpacity = useMotionValue(1);
+
   return (
     <>
       <header className="sticky top-0 z-30 border-b border-[#D8CCB4]/10 bg-[#090D0F]/90 font-[var(--font-mono)] text-[0.68rem] uppercase tracking-[0.2em] text-[#D8CCB4]/70 backdrop-blur-xl">
@@ -20,40 +35,74 @@ export default function Home() {
       </header>
 
       <main className="min-h-screen bg-[#090D0F] text-[#D8CCB4]">
-        <section id="journey" aria-labelledby="journey-title" className="relative isolate min-h-[calc(100svh-2.75rem)] overflow-hidden border-b border-[#D8CCB4]/10">
-          <Image
-            src="/assets/odysseus-hero.webp"
-            alt="Odysseus hesitates beside his war-worn ship as Troy burns across the dark water"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center opacity-70"
-          />
-          <div className="absolute inset-0 -z-0 bg-[linear-gradient(90deg,rgba(9,13,15,0.98)_0%,rgba(9,13,15,0.74)_45%,rgba(9,13,15,0.18)_100%)]" />
-          <div className="relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-            <h1 id="journey-title" className="max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
-              The Long Return
+        <section ref={heroRef} id="journey" aria-labelledby="journey-title" className="relative isolate min-h-[calc(100svh-2.75rem)] overflow-hidden border-b border-[#D8CCB4]/10">
+          <motion.div className="hero-plate-wrap" style={{ y: reducedMotion ? staticHeroY : heroY }}>
+            <Image
+              src="/assets/odysseus-hero.webp"
+              alt="Odysseus hesitates beside his war-worn ship as Troy burns across the dark water"
+              fill
+              priority
+              sizes="100vw"
+              className="hero-plate object-cover object-center opacity-70"
+            />
+          </motion.div>
+          <div className="hero-shade absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(9,13,15,0.98)_0%,rgba(9,13,15,0.74)_45%,rgba(9,13,15,0.18)_100%)]" />
+          <motion.div className="hero-fade relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8" style={{ opacity: reducedMotion ? staticHeroOpacity : heroOpacity }}>
+            <h1 id="journey-title" aria-label="The Long Return" className="max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
+              <span className="hero-word" aria-hidden="true">
+                <motion.span
+                  className="hero-word__line"
+                  initial={reducedMotion ? false : { y: "112%" }}
+                  whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.56, delay: 0, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
+                >
+                  The
+                </motion.span>
+              </span>
+              <span className="hero-word" aria-hidden="true">
+                <motion.span
+                  className="hero-word__line"
+                  initial={reducedMotion ? false : { y: "112%" }}
+                  whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.56, delay: 0.09, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
+                >
+                  Long
+                </motion.span>
+              </span>
+              <span className="hero-word" aria-hidden="true">
+                <motion.span
+                  className="hero-word__line"
+                  initial={reducedMotion ? false : { y: "112%" }}
+                  whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.56, delay: 0.18, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
+                >
+                  Return
+                </motion.span>
+              </span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#D8CCB4]/78 sm:text-xl">
               Odysseus leaves a burning victory behind and carries the dead across ten more years of sea. He survives, but survival does not leave him innocent, whole, or finished.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
               <a href="#invoke" className="journey-cta inline-flex min-h-12 items-center border border-[#A24A31] bg-[#A24A31] px-5 font-semibold text-[#090D0F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8B16A]">
-                Invoke the theme <span aria-hidden="true" className="ml-3">→</span>
+                <span className="journey-cta__label">Invoke the theme</span> <span aria-hidden="true" className="journey-cta__arrow ml-3">→</span>
               </a>
               <span className="journey-meta font-[var(--font-mono)] text-xs uppercase tracking-[0.22em]">20 years absent · one ship returns</span>
             </div>
-            <nav aria-label="Odysseus voyage index" className="mt-12 border-t border-[#D8CCB4]/20 pt-5">
+            <nav aria-label="Odysseus voyage index" className="voyage-index mt-12 border-t border-[#D8CCB4]/20 pt-5">
               <ol className="grid gap-3 font-[var(--font-mono)] text-[0.65rem] uppercase tracking-[0.18em] text-[#D8CCB4]/58 sm:grid-cols-3 lg:grid-cols-6">
-                <li><a href="#journey">Ash</a></li>
-                <li><a href="#sea">Loss</a></li>
-                <li><a href="#cunning">Cunning</a></li>
-                <li><a href="#memory">Shades</a></li>
-                <li><a href="#recognition">Signs</a></li>
-                <li><a href="#invoke">Peace</a></li>
+                <li className="voyage-index__item voyage-index__item--active"><a href="#journey">Ash <span aria-hidden="true" className="voyage-index__chevron">›</span></a></li>
+                <li><a href="#sea">Loss <span aria-hidden="true" className="voyage-index__chevron">›</span></a></li>
+                <li><a href="#cunning">Cunning <span aria-hidden="true" className="voyage-index__chevron">›</span></a></li>
+                <li><a href="#memory">Shades <span aria-hidden="true" className="voyage-index__chevron">›</span></a></li>
+                <li><a href="#recognition">Signs <span aria-hidden="true" className="voyage-index__chevron">›</span></a></li>
+                <li><a href="#invoke">Peace <span aria-hidden="true" className="voyage-index__chevron">›</span></a></li>
               </ol>
             </nav>
-          </div>
+          </motion.div>
         </section>
 
         <section id="sea" aria-labelledby="sea-title" className="border-b border-[#D8CCB4]/10 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">

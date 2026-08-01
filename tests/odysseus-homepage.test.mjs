@@ -117,6 +117,46 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.match(layout, /The Long Return/);
 });
 
+test("the hero has scroll motion, masked title lines, and reduced-motion final states", () => {
+  const journey = page.match(/<section\b[^>]*id=["']journey["'][\s\S]*?<\/section>/)?.[0] ?? "";
+
+  assert.match(page, /^"use client";/);
+  assert.match(page, /import \{ motion, useMotionValue, useReducedMotion, useScroll, useTransform \} from ["']motion\/react["']/);
+  assert.match(page, /const heroRef = useRef<HTMLElement>\(null\)/);
+  assert.match(page, /useScroll\(\{\s*target: heroRef,\s*offset: \[["']start start["'], ["']end start["']\],?\s*\}\)/);
+  assert.match(page, /useTransform\(scrollYProgress, \[0, 1\], \[["']0%["'], ["']12%["']\]\)/);
+  assert.match(page, /useTransform\(scrollYProgress, \[0, 0\.78\], \[1, 0\]\)/);
+  assert.match(page, /const reducedMotion = useReducedMotion\(\)/);
+  assert.match(page, /const staticHeroY = useMotionValue\(0\)/);
+  assert.match(page, /const staticHeroOpacity = useMotionValue\(1\)/);
+  assert.match(page, /style=\{\{ y: reducedMotion \? staticHeroY : heroY \}\}/);
+  assert.match(page, /style=\{\{ opacity: reducedMotion \? staticHeroOpacity : heroOpacity \}\}/);
+
+  assert.equal(journey.match(/className=["']hero-word["']/g)?.length, 3, "the title must have three mask lines");
+  assert.equal(journey.match(/<motion\.span\b/g)?.length, 3, "each title line must use Motion");
+  assert.match(journey, /whileInView=/);
+  assert.match(journey, /initial=\{reducedMotion \? false/);
+  assert.match(journey, /className=["']hero-plate-wrap["']/);
+  assert.match(journey, /className=["'][^"']*\bhero-plate\b/);
+  assert.match(journey, /className=["'][^"']*\bhero-fade\b/);
+
+  for (const hook of ["journey-cta__label", "journey-cta__arrow", "journey-meta", "voyage-index", "voyage-index__chevron", "voyage-index__item--active"]) {
+    assert.match(journey, new RegExp(`\\b${hook}\\b`), `missing hero interaction hook: ${hook}`);
+  }
+
+  assert.match(stylesheet, /\.hero-plate\s*\{[^}]*animation\s*:\s*hero-ken-burns\s+22s\s+ease-in-out\s+infinite\s+alternate/i);
+  assert.match(stylesheet, /@keyframes\s+hero-ken-burns\b/);
+  assert.match(stylesheet, /\.journey-cta:hover\s+\.journey-cta__arrow\s*\{/);
+  assert.match(stylesheet, /\.journey-cta:hover\s+\.journey-cta__label::after\s*\{/);
+  assert.match(stylesheet, /\.journey-meta:hover::after\s*\{/);
+  assert.match(stylesheet, /\.voyage-index\s+a:hover::before\s*\{/);
+  assert.match(stylesheet, /\.voyage-index\s+a:hover\s+\.voyage-index__chevron\s*\{/);
+
+  const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
+  assert.match(reducedMotion, /\.hero-plate[\s\S]*?animation\s*:\s*none/);
+  assert.match(reducedMotion, /\.hero-word__line[\s\S]*?transform\s*:\s*none\s*!important/);
+});
+
 test("the release package includes only the required motion runtimes", () => {
   assert.deepEqual(Object.keys(packageJson.dependencies).sort(), [
     "@heroicons/react",

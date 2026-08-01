@@ -205,6 +205,11 @@ p {
   50% { transform: translate3d(0.25rem, 0, 0); }
 }
 
+@keyframes hero-ken-burns {
+  from { transform: scale(1); }
+  to { transform: scale(1.055); }
+}
+
 header {
   border-color: var(--rule) !important;
   background: rgba(9, 13, 15, 0.96) !important;
@@ -232,10 +237,27 @@ footer {
   border-bottom: 0 !important;
 }
 
-#journey > img {
+#journey > img,
+.hero-plate {
   object-position: right center !important;
   opacity: 0.88 !important;
   filter: saturate(0.78) contrast(1.08);
+}
+
+.hero-plate-wrap {
+  position: absolute;
+  inset: -6%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-plate {
+  animation: hero-ken-burns 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.hero-shade {
+  pointer-events: none;
 }
 
 #journey > div.absolute.inset-0 {
@@ -255,15 +277,28 @@ footer {
   letter-spacing: -0.065em !important;
 }
 
+.hero-word {
+  display: block;
+  overflow: hidden;
+  padding-inline-end: 0.08em;
+}
+
+.hero-word__line {
+  display: block;
+  will-change: transform;
+}
+
 #journey h1 + p {
   max-width: 34rem !important;
   color: rgba(216, 204, 180, 0.82) !important;
 }
 
 .journey-cta {
+  position: relative;
   border-color: var(--bone) !important;
   background: var(--bone) !important;
   color: var(--hull) !important;
+  transition: background var(--dur-1) ease-out, border-color var(--dur-1) ease-out;
 }
 
 .journey-cta:hover {
@@ -272,14 +307,58 @@ footer {
   color: var(--hull) !important;
 }
 
-.journey-cta span {
+.journey-cta__label {
+  position: relative;
+}
+
+.journey-cta__label::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -0.18rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-1) ease-out;
+}
+
+.journey-cta__arrow {
   color: var(--brick);
 }
 
+.journey-cta:hover .journey-cta__arrow {
+  animation: arrow-slide var(--dur-2) ease-out;
+}
+
+.journey-cta:hover .journey-cta__label::after {
+  transform: scaleX(1);
+}
+
 .journey-meta {
+  position: relative;
+  overflow: hidden;
   padding: 0.45rem 0.65rem;
   background: rgba(9, 13, 15, 0.9);
   color: var(--bone);
+}
+
+.journey-meta::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: var(--oxidized);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-2) ease-out;
+}
+
+.journey-meta:hover::after {
+  transform: scaleX(1);
 }
 
 #journey nav[aria-label="Odysseus voyage index"] {
@@ -294,14 +373,76 @@ footer {
 }
 
 #journey nav[aria-label="Odysseus voyage index"] a {
+  position: relative;
   display: inline-flex;
   min-width: 44px;
   min-height: 44px;
   align-items: center;
+  gap: 0.35rem;
+  transition: color var(--dur-1) ease-out;
 }
 
 #journey nav[aria-label="Odysseus voyage index"] a:hover {
   color: var(--glint);
+}
+
+.voyage-index li {
+  position: relative;
+}
+
+.voyage-index a::before,
+.voyage-index a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-1) ease-out;
+}
+
+.voyage-index a::before {
+  top: 0;
+  background: var(--oxidized);
+}
+
+.voyage-index a::after {
+  bottom: 0.45rem;
+  background: currentColor;
+}
+
+.voyage-index a:hover::before {
+  transform: scaleX(1);
+}
+
+.voyage-index a:hover::after,
+.voyage-index a:focus-visible::before,
+.voyage-index a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.voyage-index__chevron {
+  color: var(--brick);
+  transition: transform var(--dur-1) ease-out;
+}
+
+.voyage-index a:hover .voyage-index__chevron {
+  transform: translate3d(0.22rem, 0, 0);
+}
+
+.voyage-index a:focus-visible .voyage-index__chevron {
+  transform: translate3d(0.22rem, 0, 0);
+}
+
+.voyage-index__item--active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.5rem;
+  height: 2px;
+  background: var(--brick);
 }
 
 #sea,
@@ -638,7 +779,8 @@ footer > div > p:first-child,
     display: none;
   }
 
-  #journey > img {
+  #journey > img,
+  .hero-plate {
     object-position: 68% center !important;
     opacity: 0.4 !important;
   }
@@ -713,6 +855,25 @@ footer > div > p:first-child,
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-plate,
+  .hero-word__line {
+    animation: none;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .journey-cta,
+  .journey-cta__arrow,
+  .journey-cta__label::after,
+  .journey-meta::after,
+  .voyage-index a,
+  .voyage-index a::before,
+  .voyage-index a::after,
+  .voyage-index__chevron {
+    animation: none;
+    transition: none;
+  }
+
   .voyage-line,
   #sea::after,
   .bow-string,
