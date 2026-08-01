@@ -127,15 +127,15 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   assert.match(page, /useTransform\(scrollYProgress, \[0, 1\], \[["']0%["'], ["']12%["']\]\)/);
   assert.match(page, /useTransform\(scrollYProgress, \[0, 0\.78\], \[1, 0\]\)/);
   assert.match(page, /const reducedMotion = useReducedMotion\(\)/);
-  assert.match(page, /const staticHeroY = useMotionValue\(0\)/);
-  assert.match(page, /const staticHeroOpacity = useMotionValue\(1\)/);
-  assert.match(page, /style=\{\{ y: reducedMotion \? staticHeroY : heroY \}\}/);
-  assert.match(page, /style=\{\{ opacity: reducedMotion \? staticHeroOpacity : heroOpacity \}\}/);
+  assert.doesNotMatch(page, /const staticHero(?:Y|Opacity)\b/);
+  assert.match(journey, /style=\{\{ y: heroY \}\}/);
+  assert.match(journey, /style=\{\{ opacity: heroOpacity \}\}/);
 
   assert.equal(journey.match(/className=["']hero-word["']/g)?.length, 3, "the title must have three mask lines");
   assert.equal(journey.match(/<motion\.span\b/g)?.length, 3, "each title line must use Motion");
   assert.match(journey, /whileInView=/);
-  assert.match(journey, /initial=\{reducedMotion \? false/);
+  assert.doesNotMatch(journey, /reducedMotion\s*\?/, "hero Motion props must match between SSR and the first client render");
+  assert.equal(journey.match(/initial=\{\{ y: ["']112%["'] \}\}/g)?.length, 3);
   assert.match(journey, /className=["']hero-plate-wrap["']/);
   assert.match(journey, /className=["'][^"']*\bhero-plate\b/);
   assert.match(journey, /className=["'][^"']*\bhero-fade\b/);
@@ -155,6 +155,26 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
   assert.match(reducedMotion, /\.hero-plate[\s\S]*?animation\s*:\s*none/);
   assert.match(reducedMotion, /\.hero-word__line[\s\S]*?transform\s*:\s*none\s*!important/);
+});
+
+test("page-level motion is hydration-safe and static for reduced motion", async () => {
+  const scrollProgress = await readFile(new URL("../components/scroll-progress.tsx", import.meta.url), "utf8");
+  const journey = page.match(/<section\b[^>]*id=["']journey["'][\s\S]*?<\/section>/)?.[0] ?? "";
+
+  assert.doesNotMatch(journey, /reducedMotion\s*\?/, "hero Motion props must match between SSR and the first client render");
+  assert.doesNotMatch(scrollProgress, /\b(?:useReducedMotion|useMotionValue|reducedMotion|finalScaleX)\b/, "progress Motion props must match between SSR and the first client render");
+  assert.match(scrollProgress, /style=\{\{ scaleX \}\}/);
+
+  const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
+  const reducedMotionFor = (target) => [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, selectors]) => selectors.split(",").map((selector) => selector.trim()).includes(target))
+    .map(([, , declarations]) => declarations)
+    .join("\n");
+
+  assert.match(reducedMotionFor(".scroll-progress"), /\btransform\s*:\s*scaleX\(1\)\s*!important\b/i, "reduced motion must keep progress static and complete");
+  assert.match(reducedMotionFor(".hero-plate-wrap"), /\btransform\s*:\s*none\s*!important\b/i, "reduced motion must keep hero art passive");
+  assert.match(reducedMotionFor(".hero-fade"), /\bopacity\s*:\s*1\s*!important\b/i, "reduced motion must keep hero content visible");
+  assert.match(reducedMotionFor(".hero-word__line"), /\btransform\s*:\s*none\s*!important\b/i, "reduced motion must reveal every title line");
 });
 
 test("the middle acts have distinct reduced-motion-safe choreography", () => {
@@ -273,9 +293,8 @@ test("the layout wires the reduced-motion-safe motion foundation", async () => {
   assert.match(lenisProvider, /cancelAnimationFrame\(/);
   assert.match(scrollProgress, /useScroll\(\)/);
   assert.match(scrollProgress, /useSpring\(scrollYProgress,/);
-  assert.match(scrollProgress, /useReducedMotion\(\)/);
-  assert.match(scrollProgress, /useMotionValue\(1\)/);
-  assert.match(scrollProgress, /style=\{\{ scaleX: reducedMotion \? finalScaleX : scaleX \}\}/);
+  assert.doesNotMatch(scrollProgress, /\b(?:useReducedMotion|useMotionValue|reducedMotion|finalScaleX)\b/);
+  assert.match(scrollProgress, /style=\{\{ scaleX \}\}/);
   assert.match(scrollProgress, /var\(--brick\)/);
   assert.match(scrollProgress, /var\(--glint\)/);
   const headerLayer = page.match(/<header[^>]*className=["'][^"']*\bz-(\d+)\b/)?.[1];

@@ -1018,9 +1018,19 @@ footer > div > p:first-child,
 
 @media (prefers-reduced-motion: reduce) {
   .hero-plate,
+  .hero-plate-wrap,
   .hero-word__line {
     animation: none;
     transform: none !important;
+    will-change: auto;
+  }
+
+  .hero-fade {
+    opacity: 1 !important;
+  }
+
+  .scroll-progress {
+    transform: scaleX(1) !important;
     will-change: auto;
   }
 

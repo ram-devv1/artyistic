@@ -59,8 +59,6 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.78], [1, 0]);
   const memoryY = useTransform(memoryScrollYProgress, [0, 1], ["-4%", "4%"]);
   const recognitionWeaveY = useTransform(recognitionScrollYProgress, [0, 1], ["-3%", "3%"]);
-  const staticHeroY = useMotionValue(0);
-  const staticHeroOpacity = useMotionValue(1);
 
   return (
     <>
@@ -80,7 +78,7 @@ export default function Home() {
 
       <main className="min-h-screen bg-[#090D0F] text-[#D8CCB4]">
         <section ref={heroRef} id="journey" aria-labelledby="journey-title" className="relative isolate min-h-[calc(100svh-2.75rem)] overflow-hidden border-b border-[#D8CCB4]/10">
-          <motion.div className="hero-plate-wrap" style={{ y: reducedMotion ? staticHeroY : heroY }}>
+          <motion.div className="hero-plate-wrap" style={{ y: heroY }}>
             <Image
               src="/assets/odysseus-hero.webp"
               alt="Odysseus hesitates beside his war-worn ship as Troy burns across the dark water"
@@ -91,13 +89,13 @@ export default function Home() {
             />
           </motion.div>
           <div className="hero-shade absolute inset-0 z-0 bg-[linear-gradient(90deg,rgba(9,13,15,0.98)_0%,rgba(9,13,15,0.74)_45%,rgba(9,13,15,0.18)_100%)]" />
-          <motion.div className="hero-fade relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8" style={{ opacity: reducedMotion ? staticHeroOpacity : heroOpacity }}>
+          <motion.div className="hero-fade relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8" style={{ opacity: heroOpacity }}>
             <h1 id="journey-title" aria-label="The Long Return" className="max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
               <span className="hero-word" aria-hidden="true">
                 <motion.span
                   className="hero-word__line"
-                  initial={reducedMotion ? false : { y: "112%" }}
-                  whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                  initial={{ y: "112%" }}
+                  whileInView={{ y: ["112%", "-3%", "0%"] }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.56, delay: 0, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
                 >
@@ -107,8 +105,8 @@ export default function Home() {
               <span className="hero-word" aria-hidden="true">
                 <motion.span
                   className="hero-word__line"
-                  initial={reducedMotion ? false : { y: "112%" }}
-                  whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                  initial={{ y: "112%" }}
+                  whileInView={{ y: ["112%", "-3%", "0%"] }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.56, delay: 0.09, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
                 >
@@ -118,8 +116,8 @@ export default function Home() {
               <span className="hero-word" aria-hidden="true">
                 <motion.span
                   className="hero-word__line"
-                  initial={reducedMotion ? false : { y: "112%" }}
-                  whileInView={reducedMotion ? undefined : { y: ["112%", "-3%", "0%"] }}
+                  initial={{ y: "112%" }}
+                  whileInView={{ y: ["112%", "-3%", "0%"] }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.56, delay: 0.18, times: [0, 0.82, 1], ease: [[0.22, 1, 0.36, 1], [0.22, 1.15, 0.36, 1]] }}
                 >
