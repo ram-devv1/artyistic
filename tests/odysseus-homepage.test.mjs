@@ -497,25 +497,50 @@ test("the narrative asset manifest records the production boundary", async () =>
 });
 
 test("the shared motion and imagery languages lock reusable contracts", async () => {
-  const [motionLanguage, imageryLanguage] = await Promise.all([
+  const [motionLanguage, imageryLanguage, skill, openaiMetadata] = await Promise.all([
     readFile(new URL("../skills/artystic/references/motion-language.md", import.meta.url), "utf8"),
     readFile(new URL("../skills/artystic/references/imagery-language.md", import.meta.url), "utf8"),
+    readFile(new URL("../skills/artystic/SKILL.md", import.meta.url), "utf8"),
+    readFile(new URL("../skills/artystic/agents/openai.yaml", import.meta.url), "utf8"),
   ]);
+
+  assert.match(skill, odysseusRoute);
+  assert.match(skill, /task involving page motion[^\n]*read `references\/motion-language\.md` in full before designing/i);
+  assert.match(skill, /task involving imagery[^\n]*read `references\/imagery-language\.md` in full before designing/i);
+  assert.match(skill, /refuse[^\n]*AI-generated editorial pixels/i);
+  assert.match(skill, /refuse[^\n]*copied film assets/i);
 
   for (const duration of [180, 320, 560, 900]) {
     assert.match(motionLanguage, new RegExp(`\\b${duration}\\s*ms\\b`), `missing ${duration} ms motion token`);
   }
   assert.match(motionLanguage, /motion\/react/);
   assert.match(motionLanguage, /lenis/i);
+  assert.match(motionLanguage, /never use both systems on the same element/i);
+  assert.match(motionLanguage, /act[^\n]*unique[^\n]*motion moment/i);
   assert.match(motionLanguage, /MotionConfig[^\n]*reducedMotion=["'`]user["'`]/);
   assert.match(motionLanguage, /prefers-reduced-motion/);
+  for (const contract of ["Hydration", "Performance", "Accessibility", "Completion"]) {
+    assert.match(motionLanguage, new RegExp(`## ${contract} contract`, "i"), `missing ${contract.toLowerCase()} contract`);
+  }
 
   assert.match(imageryLanguage, /verified public-domain museum objects/i);
+  assert.match(imageryLanguage, /isPublicDomain[^\n]*true/);
+  assert.match(imageryLanguage, /contact sheet/i);
+  assert.match(imageryLanguage, /full[- ]size review/i);
+  assert.match(imageryLanguage, /generative pixel synthesis[^\n]*not ["'`]authored["'`]/i);
   assert.match(imageryLanguage, /schema v3/i);
   assert.match(imageryLanguage, /thirdPartyVisualPixels[^\n]*true/);
   for (const field of ["title", "accessionNumber", "objectDate", "culture", "creditLine", "sourceUrl", "license"]) {
     assert.match(imageryLanguage, new RegExp(`\\b${field}\\b`), `imagery schema must document ${field}`);
   }
+  for (const contract of ["Alt text", "Caption", "Source boundary", "Completion"]) {
+    assert.match(imageryLanguage, new RegExp(`## ${contract} contract`, "i"), `missing ${contract.toLowerCase()} contract`);
+  }
+
+  const shortDescription = openaiMetadata.match(/short_description:\s*"([^"]+)"/)?.[1] ?? "";
+  assert.ok(shortDescription.length >= 25 && shortDescription.length <= 64);
+  assert.match(openaiMetadata, /default_prompt:\s*"[^"]*\$artystic[^"]*authored archival collages[^"]*layered narrative motion[^"]*\."/i);
+  assert.doesNotMatch(openaiMetadata, /^\s+(?:icon_small|icon_large|brand_color):/m);
 });
 
 test("the Odysseus reference defines motion per act", async () => {
@@ -529,4 +554,16 @@ test("the Odysseus reference defines motion per act", async () => {
     assert.match(motionTable, new RegExp(act.replaceAll("/", "\\/"), "i"), `missing motion contract for ${act}`);
   }
   assert.doesNotMatch(reference, /exactly two meaningful motion moments/i);
+  assert.match(reference, /ten-year return/i);
+  assert.match(reference, /follow `references\/imagery-language\.md`/i);
+
+  const tableauContracts = reference.match(/## Three tableau contracts[\s\S]*?(?=\n## |$)/i)?.[0] ?? "";
+  assert.ok(tableauContracts, "missing three-tableau contract section");
+  assert.equal(tableauContracts.match(/^\| (?:Hero|Underworld|Homecoming)\b/gm)?.length, 3);
+  for (const searchTerm of ["mycenaean octopus jar", "cypriot boat model", "white-ground lekythos", "odysseus penelope relief", "owl skyphos"]) {
+    assert.match(tableauContracts, new RegExp(searchTerm, "i"), `missing approved source search: ${searchTerm}`);
+  }
+  assert.match(reference, /refuse AI-generated editorial pixels/i);
+  assert.match(reference, /refuse copied film assets/i);
+  assert.match(reference, /## Completion checklist/i);
 });

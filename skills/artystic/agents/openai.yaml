@@ -1,4 +1,4 @@
 interface:
   display_name: "Artystic"
-  short_description: "Editorial web design with an Odysseus theme"
-  default_prompt: "Use $artystic with the artystic odysseus theme to critique and rebuild this page as an authored editorial experience."
+  short_description: "Authored editorial web art direction"
+  default_prompt: "Use $artystic to commission authored archival collages and layered narrative motion for this page."
