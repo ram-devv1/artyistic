@@ -38,10 +38,10 @@ export default function Home() {
               Odysseus leaves a burning victory behind and carries the dead across ten more years of sea. He survives, but survival does not leave him innocent, whole, or finished.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
-              <a href="#invoke" className="inline-flex min-h-12 items-center border border-[#A24A31] bg-[#A24A31] px-5 font-semibold text-[#090D0F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8B16A]">
+              <a href="#invoke" className="journey-cta inline-flex min-h-12 items-center border border-[#A24A31] bg-[#A24A31] px-5 font-semibold text-[#090D0F] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C8B16A]">
                 Invoke the theme <span aria-hidden="true" className="ml-3">→</span>
               </a>
-              <span className="font-[var(--font-mono)] text-xs uppercase tracking-[0.22em] text-[#D8CCB4]/55">20 years absent · one ship returns</span>
+              <span className="journey-meta font-[var(--font-mono)] text-xs uppercase tracking-[0.22em]">20 years absent · one ship returns</span>
             </div>
             <nav aria-label="Odysseus voyage index" className="mt-12 border-t border-[#D8CCB4]/20 pt-5">
               <ol className="grid gap-3 font-[var(--font-mono)] text-[0.65rem] uppercase tracking-[0.18em] text-[#D8CCB4]/58 sm:grid-cols-3 lg:grid-cols-6">
@@ -141,12 +141,26 @@ export default function Home() {
                 <h2 id="invoke-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">String the bow. End the cycle.</h2>
                 <p className="mt-7 max-w-xl text-lg leading-8 text-[#D8CCB4]/70">The bow restores Odysseus’s name through violence. The olive-root bed restores the marriage through memory. Athena must still stop revenge from repeating itself.</p>
               </div>
-              <div className="border-y border-[#D8CCB4]/20 py-8">
+              <div className="invoke-command border-y border-[#D8CCB4]/20 py-8">
                 <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.24em] text-[#C8B16A]">Artystic theme command</p>
-                <pre className="mt-5 overflow-x-auto font-[var(--font-mono)] text-2xl text-[#D8CCB4] sm:text-4xl"><code>npx artystic</code></pre>
+                <pre className="mt-5 font-[var(--font-mono)] text-2xl text-[#D8CCB4] sm:text-4xl"><code>npx artystic</code></pre>
                 <div className="mt-7"><CopyCommand command="npx artystic" /></div>
                 <p className="mt-6 max-w-xl text-sm leading-7 text-[#D8CCB4]/58">Invoke <code className="text-[#C8B16A]">artystic odysseus</code> for the narrative, palette, typography, imagery, motion budget, and source boundaries of The Long Return.</p>
               </div>
+            </div>
+            <div className="axe-register" aria-hidden="true">
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
+              <span className="axe-aperture" />
             </div>
           </div>
         </section>

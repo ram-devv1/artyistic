@@ -137,25 +137,37 @@ footer {
   color: rgba(216, 204, 180, 0.82) !important;
 }
 
-#journey a[href="#invoke"] {
+.journey-cta {
   border-color: var(--bone) !important;
   background: var(--bone) !important;
   color: var(--hull) !important;
 }
 
-#journey a[href="#invoke"]:hover {
+.journey-cta:hover {
   background: var(--oxidized) !important;
   border-color: var(--oxidized) !important;
   color: var(--hull) !important;
 }
 
-#journey a[href="#invoke"] span {
+.journey-cta span {
   color: var(--brick);
+}
+
+.journey-meta {
+  padding: 0.45rem 0.65rem;
+  background: rgba(9, 13, 15, 0.9);
+  color: var(--bone);
 }
 
 #journey nav[aria-label="Odysseus voyage index"] {
   max-width: 62rem;
+  padding-inline: 1rem;
   border-color: rgba(216, 204, 180, 0.26) !important;
+  background: rgba(9, 13, 15, 0.9);
+}
+
+#journey nav[aria-label="Odysseus voyage index"] ol {
+  color: var(--bone) !important;
 }
 
 #journey nav[aria-label="Odysseus voyage index"] a {
@@ -365,7 +377,7 @@ footer p {
   max-width: 41rem;
 }
 
-#invoke > div > div:last-child {
+.invoke-command {
   border-color: rgba(216, 204, 180, 0.3) !important;
 }
 
@@ -411,6 +423,43 @@ footer p {
   background: center / 100% 100% no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 464' preserveAspectRatio='none'%3E%3Cpath d='M18 1 C78 118 78 346 18 463' fill='none' stroke='%23806230' stroke-width='4'/%3E%3C/svg%3E");
   opacity: 0.7;
   pointer-events: none;
+}
+
+.axe-register {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  width: min(52rem, calc(100% - 8rem));
+  margin-top: clamp(5rem, 9vw, 8rem);
+}
+
+.axe-register::before {
+  content: "";
+  position: absolute;
+  top: 0.95rem;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--brick);
+}
+
+.axe-aperture {
+  position: relative;
+  height: 3.5rem;
+  border-left: 1px solid rgba(128, 98, 48, 0.72);
+}
+
+.axe-aperture::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0.5rem;
+  left: -0.42rem;
+  width: 0.84rem;
+  height: 0.96rem;
+  border: 1px solid var(--bronze);
+  border-radius: 50%;
+  background: var(--hull);
 }
 
 @keyframes bowstring-tension {
@@ -514,7 +563,7 @@ footer > div > p:first-child,
   #cunning > div > div,
   #memory > div,
   #recognition > div > div,
-  #invoke > div > div,
+  #invoke > div > div:first-child,
   footer > div {
     grid-template-columns: minmax(0, 1fr) !important;
   }
@@ -550,6 +599,12 @@ footer > div > p:first-child,
   #invoke::before,
   #invoke::after {
     display: none;
+  }
+
+  #invoke > div > .axe-register {
+    grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+    width: 100%;
+    margin-top: 4rem;
   }
 }
 

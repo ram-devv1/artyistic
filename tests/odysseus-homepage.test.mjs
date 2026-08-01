@@ -73,6 +73,8 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.match(page, /<CopyCommand command=["']npx artystic["'] \/>/);
   assert.match(page, /aria-label=["']Primary navigation["']/);
   assert.match(page, /aria-label=["']Odysseus voyage index["']/);
+  assert.match(page, /href=["']#invoke["'][^>]*className=["'][^"']*\bjourney-cta\b/i);
+  assert.match(page, /className=["'][^"']*\bjourney-meta\b/i);
 
   const images = [
     ["/assets/odysseus-hero.webp", "Storm-dark Aegean voyage collage tracing the long return to Ithaca"],
@@ -105,6 +107,10 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.doesNotMatch(recognitionSection, /recognition-card__mark|<article[^>]*>\s*<p\b[^>]*>[\s\S]*?<\/p>\s*<h3\b/s, "recognition card headings must stand without micro-eyebrow labels");
   assert.doesNotMatch(page, /Odysseus · Νόστος/, "the hero must not include a kicker");
 
+  const invokeSection = page.match(/<section id=["']invoke["'][\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.equal(invokeSection.match(/className=["']axe-aperture["']/g)?.length, 12, "the final bow must align with twelve axe apertures");
+  assert.doesNotMatch(invokeSection, /<pre[^>]*\boverflow-x-auto\b/i, "the short command must not render an overflow scrollbar");
+
   assert.match(layout, /GFS_Didot/);
   assert.match(layout, /IBM_Plex_Sans/);
   assert.match(layout, /IBM_Plex_Mono/);
@@ -129,6 +135,19 @@ test("the visual system keeps its motion and input affordance contracts", () => 
   assert.match(voyageLinkRule, /min-height\s*:\s*44px\b/i);
   assert.match(voyageLinkRule, /min-width\s*:\s*44px\b/i);
 
+  assert.doesNotMatch(stylesheet, /#journey\s+a\[href=["']?#invoke/i, "voyage links must not inherit primary CTA styling");
+  const journeyCtaRule = extractBlock(stylesheet, ".journey-cta");
+  assert.match(journeyCtaRule, /background\s*:\s*var\(--bone\)/i);
+
+  const journeyMetaRule = extractBlock(stylesheet, ".journey-meta");
+  assert.match(journeyMetaRule, /color\s*:\s*var\(--bone\)/i);
+
+  const voyageIndexRule = extractBlock(stylesheet, '#journey nav[aria-label="Odysseus voyage index"]');
+  assert.match(voyageIndexRule, /background\s*:\s*rgba\(9,\s*13,\s*15,\s*0\.[89]\d*\)/i);
+
+  const axeRegisterRule = extractBlock(stylesheet, ".axe-register");
+  assert.match(axeRegisterRule, /grid-template-columns\s*:\s*repeat\(12,/i);
+
   const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
   const rules = [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
 
@@ -146,6 +165,9 @@ test("the mobile layout keeps recognition art and primary navigation visible", (
   const mobile = extractBlock(stylesheet, "@media (max-width: 767px)");
   const recognitionGrid = extractBlock(mobile, "#recognition > div > div:first-child");
   assert.match(recognitionGrid, /grid-template-columns\s*:\s*minmax\(0,\s*1fr\)\s*!important/i);
+
+  const mobileAxeRegister = extractBlock(mobile, ".axe-register");
+  assert.match(mobileAxeRegister, /grid-template-columns\s*:\s*repeat\(12,/i);
 
   const compactNavigation = extractBlock(mobile, "header nav a:nth-child(2)");
   assert.match(compactNavigation, /display\s*:\s*none\b/i);
