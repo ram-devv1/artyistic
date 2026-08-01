@@ -48,6 +48,10 @@ test("the homepage source declares the complete Long Return contract", () => {
   const cunningSection = page.match(/<section id=["']cunning["'][\s\S]*?(?=<section id=["']memory["'])/)?.[0] ?? "";
   assert.ok(cunningSection, "missing #cunning");
   assert.doesNotMatch(cunningSection, /cunning-card__mark|<article[^>]*>\s*<p[^>]*\buppercase\b/s, "cunning cards must not repeat micro-eyebrow labels");
+
+  const recognitionSection = page.match(/<section id=["']recognition["'][\s\S]*?(?=<section id=["']invoke["'])/)?.[0] ?? "";
+  assert.ok(recognitionSection, "missing #recognition");
+  assert.doesNotMatch(recognitionSection, /recognition-card__mark|<article[^>]*>\s*<p\b[^>]*>[\s\S]*?<\/p>\s*<h3\b/s, "recognition card headings must stand without micro-eyebrow labels");
   assert.doesNotMatch(page, /Odysseus · Νόστος/, "the hero must not include a kicker");
 
   assert.match(layout, /GFS_Didot/);

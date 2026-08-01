@@ -127,9 +127,9 @@ export default function Home() {
               </div>
             </div>
             <div className="mt-12 grid gap-8 md:grid-cols-3">
-              <article className="border-t border-[#D8CCB4]/15 pt-6"><p className="font-[var(--font-mono)] text-xs text-[#A24A31]">ARGOS / LOYALTY</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></article>
-              <article className="border-t border-[#D8CCB4]/15 pt-6"><p className="font-[var(--font-mono)] text-xs text-[#A24A31]">SCAR / TOUCH</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></article>
-              <article className="border-t border-[#D8CCB4]/15 pt-6"><p className="font-[var(--font-mono)] text-xs text-[#A24A31]">PENELOPE / ROOT</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></article>
+              <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl">The old dog knows first</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Argos raises his head, recognizes the hidden master, and dies after keeping the twenty-year watch.</p></article>
+              <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl">The body keeps its name</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Eurycleia finds the scar beneath the disguise: identity preserved where speech still withholds it.</p></article>
+              <article className="border-t border-[#D8CCB4]/15 pt-6"><h3 className="font-[var(--font-serif)] text-3xl">The bed cannot be moved</h3><p className="mt-3 leading-7 text-[#D8CCB4]/62">Penelope’s final test is shared knowledge: their bed was built around a living olive tree.</p></article>
             </div>
           </div>
         </section>
