@@ -116,4 +116,4 @@
 - [x] **Step 2: Inspect the page at 1440px and 390px, including navigation, cropping, hierarchy, horizontal overflow, focus, copy action, and reduced motion.**
 - [x] **Step 3: Run the same automated checks again after visual fixes.**
 - [x] **Step 4: Forward-test the skill on a fresh bounded theme request and review the raw result for routing and source discipline.**
-- [ ] **Step 5: Commit the finished v1.1 work and tag it `v1.1.0`; do not push without a separate request.**
+- [x] **Step 5: Commit the finished v1.1 work and tag it `v1.1.0`; do not push without a separate request.**
