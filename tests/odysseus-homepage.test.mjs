@@ -163,30 +163,32 @@ test("the middle acts have distinct reduced-motion-safe choreography", () => {
   const cunning = section("cunning");
   const memory = section("memory");
   const recognition = section("recognition");
+  const taskFiveSections = `${sea}\n${cunning}\n${memory}\n${recognition}`;
 
   assert.match(page, /const revealViewport = \{ once: true, amount: 0\.3 \}/);
+  assert.doesNotMatch(taskFiveSections, /reducedMotion\s*\?/, "Task 5 Motion props must match between SSR and the first client render");
 
-  assert.match(sea, /ref=\{seaRef\}/);
+  assert.doesNotMatch(page, /\bseaRef\b/, "the sea section must not keep an unused ref");
   assert.match(sea, /<motion\.span\b[^>]*className=["']section-title-mask__line["']/);
   assert.match(sea, /className=["']sea-route["']/);
   assert.match(sea, /className=["']ship-marker["']/);
-  assert.match(sea, /offsetDistance: reducedMotion \? ["']100%["'] : ["']0%["']/);
-  assert.match(sea, /whileInView=\{reducedMotion \? undefined : \{ offsetDistance: ["']100%["'] \}\}/);
+  assert.match(sea, /initial=\{\{ offsetDistance: ["']0%["'] \}\}/);
+  assert.match(sea, /whileInView=\{\{ offsetDistance: ["']100%["'] \}\}/);
   assert.equal(sea.match(/<motion\.li\b/g)?.length, 6, "all six losses must rise independently");
   assert.equal(sea.match(/\bsea-step\b/g)?.length, 6, "all six losses need the interaction hook");
   assert.equal(sea.match(/\bsea-step__rule\b/g)?.length, 6, "all six losses need a drawing rule");
-  assert.equal(sea.match(/whileHover=\{reducedMotion \? undefined : \{ x: 4 \}\}/g)?.length, 6, "sea losses must shift exactly 4px on hover");
+  assert.equal(sea.match(/whileHover=\{\{ x: 4 \}\}/g)?.length, 6, "sea losses must shift exactly 4px on hover");
 
   assert.equal(cunning.match(/<motion\.article\b/g)?.length, 4, "all four cunning cards must reveal");
   assert.equal(cunning.match(/\bcunning-card__rule\b/g)?.length, 4, "all four cunning borders must draw");
   assert.equal(cunning.match(/x: -32/g)?.length, 2, "two cunning cards must enter from the left");
   assert.equal(cunning.match(/x: 32/g)?.length, 2, "two cunning cards must enter from the right");
-  assert.equal(cunning.match(/whileHover=\{reducedMotion \? undefined : \{ y: -4 \}\}/g)?.length, 4, "cunning cards must lift exactly 4px");
+  assert.equal(cunning.match(/whileHover=\{\{ y: -4 \}\}/g)?.length, 4, "cunning cards must lift exactly 4px");
 
   assert.match(page, /useScroll\(\{\s*target: memoryRef,\s*offset: \[["']start end["'], ["']end start["']\],?\s*\}\)/);
   assert.match(page, /useTransform\(memoryScrollYProgress, \[0, 1\], \[["']-4%["'], ["']4%["']\]\)/);
   assert.match(memory, /className=["']memory-plate["']/);
-  assert.match(memory, /scale: reducedMotion \? 1 : 1\.08/);
+  assert.match(memory, /style=\{\{ y: memoryY, scale: 1\.08 \}\}/);
   assert.equal(memory.match(/\bmemory-line\b/g)?.length, 2, "the memory heading and introduction must reveal line by line");
   assert.equal(memory.match(/<motion\.article\b/g)?.length, 2, "both named shades must rise");
   assert.equal(memory.match(/\bmemory-voice__rule\b/g)?.length, 2, "both shade rules must draw");
@@ -213,11 +215,33 @@ test("the middle acts have distinct reduced-motion-safe choreography", () => {
   assert.match(stylesheet, /\.ticker\s*\{[^}]*animation\s*:\s*ticker-scroll\s+36s\s+linear\s+infinite/s);
 
   const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
-  for (const hook of ["section-title-mask__line", "draw-line", "cunning-card", "memory-line", "memory-voice", "recognition-sign", "recognition-weave"]) {
-    assert.match(reducedMotion, new RegExp(`\\.${hook}\\b`), `missing reduced-motion final state for .${hook}`);
+  const reducedMotionFor = (target) => [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, selectors]) => selectors.split(",").map((selector) => selector.trim()).includes(target))
+    .map(([, , declarations]) => declarations)
+    .join("\n");
+
+  for (const target of [".cunning-card", ".memory-line", ".memory-voice", ".recognition-sign", ".rv-stagger > *"]) {
+    assert.match(reducedMotionFor(target), /\bopacity\s*:\s*1\s*!important\b/i, `${target} must override inline hidden opacity`);
   }
-  assert.match(reducedMotion, /\.ship-marker[\s\S]*?offset-distance\s*:\s*100%/);
-  assert.match(reducedMotion, /\.recognition-plate[\s\S]*?clip-path\s*:\s*inset\(0\)/);
+  for (const target of [".section-title-mask__line", ".draw-line", ".cunning-card", ".cunning-card__rule", ".memory-plate", ".memory-line", ".memory-voice", ".recognition-sign", ".recognition-weave", ".rv-stagger > *"]) {
+    assert.match(reducedMotionFor(target), /\btransform\s*:\s*none\s*!important\b/i, `${target} must override inline transforms`);
+  }
+  assert.match(reducedMotionFor(".ship-marker"), /\boffset-distance\s*:\s*100%\s*!important\b/i);
+  assert.match(reducedMotionFor(".recognition-plate"), /\bclip-path\s*:\s*inset\(0\)\s*!important\b/i);
+  assert.match(reducedMotionFor(".memory-line"), /\bclip-path\s*:\s*inset\(0\)\s*!important\b/i);
+
+  const seaRuleFinal = reducedMotionFor(".sea-step::before");
+  assert.match(seaRuleFinal, /\btransition\s*:\s*none\b/i);
+  assert.match(seaRuleFinal, /\btransform\s*:\s*scaleY\(1\)/i);
+  assert.match(reducedMotionFor(".sea-step__label"), /\btransition\s*:\s*none\b/i);
+  const cunningUnderlineFinal = reducedMotionFor(".cunning-card h3::after");
+  assert.match(cunningUnderlineFinal, /\btransition\s*:\s*none\b/i);
+  assert.match(cunningUnderlineFinal, /\btransform\s*:\s*scaleX\(1\)/i);
+
+  const baseStyles = stylesheet.slice(0, stylesheet.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.doesNotMatch(baseStyles, /\.section-title-mask__line\s*\{[^}]*\bwill-change\s*:/s);
+  assert.doesNotMatch(baseStyles, /\.ship-marker\s*\{[^}]*\bwill-change\s*:/s);
+  assert.doesNotMatch(baseStyles, /\.memory-line\s*,\s*\.memory-voice\s*\{[^}]*\bwill-change\s*:/s);
 });
 
 test("the release package includes only the required motion runtimes", () => {

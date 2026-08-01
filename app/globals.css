@@ -500,7 +500,6 @@ footer {
 
 .section-title-mask__line {
   display: block;
-  will-change: transform;
 }
 
 #sea > div,
@@ -553,7 +552,6 @@ footer > div {
   offset-path: path("M 0 58 L 118 28 L 232 56 L 354 17 L 474 48 L 608 24 L 800 44");
   offset-path: shape(from 0% 72.5%, line to 14.75% 35%, line to 29% 70%, line to 44.25% 21.25%, line to 59.25% 60%, line to 76% 30%, line to 100% 55%);
   offset-rotate: 0deg;
-  will-change: offset-distance;
 }
 
 .ship-marker::before {
@@ -716,11 +714,6 @@ footer p {
 
 #memory article {
   border-color: transparent !important;
-}
-
-.memory-line,
-.memory-voice {
-  will-change: transform, opacity;
 }
 
 .memory-voice__rule {
@@ -1053,10 +1046,16 @@ footer > div > p:first-child,
   .recognition-sign,
   .recognition-weave {
     animation: none;
-    opacity: 1;
     transform: none !important;
     transition: none;
     will-change: auto;
+  }
+
+  .cunning-card,
+  .memory-line,
+  .memory-voice,
+  .recognition-sign {
+    opacity: 1 !important;
   }
 
   .memory-line {
@@ -1065,16 +1064,30 @@ footer > div > p:first-child,
 
   .ship-marker {
     animation: none;
-    offset-distance: 100%;
-    transform: none;
+    offset-distance: 100% !important;
+    transform: none !important;
     will-change: auto;
   }
 
   .recognition-plate {
     animation: none;
-    clip-path: inset(0);
-    transform: none;
+    clip-path: inset(0) !important;
+    transform: none !important;
     will-change: auto;
+  }
+
+  .sea-step::before {
+    transform: scaleY(1);
+    transition: none;
+  }
+
+  .sea-step__label {
+    transition: none;
+  }
+
+  .cunning-card h3::after {
+    transform: scaleX(1);
+    transition: none;
   }
 
   .voyage-line,
@@ -1090,18 +1103,18 @@ footer > div > p:first-child,
   .rv-clip,
   .rv-stagger > * {
     animation: none;
-    transform: none;
+    transform: none !important;
     will-change: auto;
   }
 
   .stat,
   .rv,
   .rv-stagger > * {
-    opacity: 1;
+    opacity: 1 !important;
   }
 
   .rv-clip {
-    clip-path: inset(0);
+    clip-path: inset(0) !important;
   }
 
   .ticker {
