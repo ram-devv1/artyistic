@@ -31,8 +31,7 @@ export default function Home() {
           />
           <div className="absolute inset-0 -z-0 bg-[linear-gradient(90deg,rgba(9,13,15,0.98)_0%,rgba(9,13,15,0.74)_45%,rgba(9,13,15,0.18)_100%)]" />
           <div className="relative z-10 mx-auto flex min-h-[calc(100svh-2.75rem)] max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-            <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.28em] text-[#C8B16A]">Odysseus · Νόστος</p>
-            <h1 id="journey-title" className="mt-5 max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
+            <h1 id="journey-title" className="max-w-4xl font-[var(--font-serif)] text-6xl leading-[0.88] tracking-[-0.055em] text-[#D8CCB4] sm:text-8xl lg:text-[9rem]">
               The Long Return
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#D8CCB4]/78 sm:text-xl">
@@ -80,10 +79,10 @@ export default function Home() {
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr]">
             <h2 id="cunning-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">Every escape leaves a mark</h2>
             <div className="grid gap-px bg-[#D8CCB4]/15 sm:grid-cols-2">
-              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Name / eye / ram</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Nobody survives the cave</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">Odysseus hides beneath wool, then pride makes him name himself across the water.</p></article>
-              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Cup / root / oath</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Circe suspends the year</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">A cup changes bodies; moly, a blade, and an oath restore them. Survival remains negotiation.</p></article>
-              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Mast / rope / song</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Desire is given a boundary</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">He hears the Sirens bound upright while the crew rows past with sealed ears.</p></article>
-              <article className="bg-[#090D0F] p-7"><p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.2em] text-[#C8B16A]">Scylla / Charybdis</p><h3 className="mt-4 font-[var(--font-serif)] text-3xl">Cunning cannot save everyone</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">His intelligence is practical and violent: it preserves the vessel by accepting six deaths.</p></article>
+              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Nobody survives the cave</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">Odysseus hides beneath wool, then pride makes him name himself across the water.</p></article>
+              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Circe suspends the year</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">A cup changes bodies; moly, a blade, and an oath restore them. Survival remains negotiation.</p></article>
+              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Desire is given a boundary</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">He hears the Sirens bound upright while the crew rows past with sealed ears.</p></article>
+              <article className="bg-[#090D0F] p-7"><h3 className="font-[var(--font-serif)] text-3xl">Cunning cannot save everyone</h3><p className="mt-4 leading-7 text-[#D8CCB4]/66">His intelligence is practical and violent: it preserves the vessel by accepting six deaths.</p></article>
             </div>
           </div>
         </section>

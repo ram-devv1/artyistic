@@ -18,6 +18,8 @@ test("the homepage source declares the complete Long Return contract", () => {
   }
 
   assert.match(page, /npx artystic/);
+  assert.match(page, /import \{ CopyCommand \} from ["']@\/components\/copy-command["']/);
+  assert.match(page, /<CopyCommand command=["']npx artystic["'] \/>/);
   assert.match(page, /aria-label=["']Primary navigation["']/);
   assert.match(page, /aria-label=["']Odysseus voyage index["']/);
 
@@ -31,6 +33,7 @@ test("the homepage source declares the complete Long Return contract", () => {
     assert.match(page, new RegExp(src.replaceAll("/", "\\/")), `missing ${src}`);
     assert.ok(page.includes(`alt="${alt}"`), `missing meaningful alt text for ${src}`);
   }
+  assert.equal(page.match(/\/assets\/odysseus-[^"']+\.webp/g)?.length, 3, "expected exactly three Odysseus images");
 
   assert.match(page, /Homeric material/);
   assert.match(page, /later visual reception/i);
@@ -39,6 +42,13 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.doesNotMatch(`${page}\n${layout}`, /[—–]/, "visible source copy must not use em or en dashes");
   assert.doesNotMatch(page, /Act [IVX]+/, "acts must remain semantic rather than visible labels");
   assert.doesNotMatch(page, /0[1-6] [·/]/, "narrative order must not appear as decorative numbering");
+  assert.doesNotMatch(page, />[^<{]*\bv(?:ersion)?\s*\d+(?:\.\d+)+[^<{]*</i, "version labels must not be visible");
+  assert.doesNotMatch(page, />[^<{]*\b(?:scroll|keep scrolling)\b[^<{]*</i, "scroll cues must not be visible");
+
+  const cunningSection = page.match(/<section id=["']cunning["'][\s\S]*?(?=<section id=["']memory["'])/)?.[0] ?? "";
+  assert.ok(cunningSection, "missing #cunning");
+  assert.doesNotMatch(cunningSection, /cunning-card__mark|<article[^>]*>\s*<p[^>]*\buppercase\b/s, "cunning cards must not repeat micro-eyebrow labels");
+  assert.doesNotMatch(page, /Odysseus · Νόστος/, "the hero must not include a kicker");
 
   assert.match(layout, /GFS_Didot/);
   assert.match(layout, /IBM_Plex_Sans/);
