@@ -23,28 +23,33 @@ function extractBlock(source, marker) {
   assert.fail(`unclosed block for ${marker}`);
 }
 
+const odysseusRoute = /exact phrase\s+`artystic odysseus`,\s+read\s+`references\/odysseus\.md`\s+in full\b/i;
+const odysseusSourceContracts = [
+  ["Homeric narrative", /\*\*Homeric narrative:\*\*[^\n]*textual story layer/i],
+  ["Bronze Age material", /\*\*Bronze Age material:\*\*[^\n]*material culture[^\n]*not proof of a literal Homeric scene/i],
+  ["later Greek visual reception", /\*\*Later Greek visual reception:\*\*[^\n]*later interpretations[^\n]*not documentary views of Troy/i],
+  ["original modern composition", /\*\*Original modern composition:\*\*[^\n]*synthesize those layers[^\n]*modern cinema only as atmosphere[^\n]*never historical evidence/i],
+  ["original modern composition film boundary", /refuse copied film assets[^\n]*trailer frames/i],
+];
+
+function assertOdysseusContracts(skill, reference) {
+  assert.match(skill, odysseusRoute, "the exact Odysseus route must require its full reference");
+
+  for (const [sourceLayer, contract] of odysseusSourceContracts) {
+    assert.match(reference, contract, `missing source boundary: ${sourceLayer}`);
+  }
+}
+
 test("Artystic routes the exact Odysseus theme to its complete contract", async () => {
   const skill = await readFile(new URL("../skills/artystic/SKILL.md", import.meta.url), "utf8");
-  assert.match(skill, /`artystic odysseus`[^\n]*`references\/odysseus\.md`/);
-  assert.match(skill, /read[^\n]*in full/i);
-
   const reference = await readFile(new URL("../skills/artystic/references/odysseus.md", import.meta.url), "utf8");
+  assertOdysseusContracts(skill, reference);
 
   for (const emotion of ["survivor's guilt", "revenge", "responsibility", "grief", "pain", "anger"]) {
     assert.match(reference, new RegExp(emotion.replace("'", "['’]"), "i"), `missing ${emotion}`);
   }
 
-  for (const sourceLayer of [
-    "Bronze Age material",
-    "Homeric narrative",
-    "later Greek visual reception",
-    "original modern composition",
-  ]) {
-    assert.match(reference, new RegExp(sourceLayer, "i"), `missing source boundary: ${sourceLayer}`);
-  }
-
   assert.match(reference, /modern interpretive lens[^\n]*never[^\n]*Homeric diagnosis/i);
-  assert.match(reference, /refuse[^\n]*(?:copied film assets|film assets[^\n]*copied)/i);
 });
 
 test("the homepage source declares the complete Long Return contract", () => {
