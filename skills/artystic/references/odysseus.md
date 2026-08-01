@@ -36,7 +36,7 @@ Use a cold, time-worn palette:
 
 - Set display titles and real Greek labels in **GFS Didot**; never fake Greek with substituted Latin glyphs.
 - Set navigation and readable copy in **IBM Plex Sans**. Set coordinates, source labels, and command syntax in **IBM Plex Mono**.
-- Compose authored archival collage from rights-cleared museum material, decisive crops, duotone separation, ink/grain, and original cartographic marks. It must not resemble AI concept art.
+- Create original narrative photographic tableaux with practical-set logic: human-scale blocking, worn materials, irregular props, restrained analog film texture, and one legible story beat per frame. If generation is used, disclose it, art-direct the blocking, crop, grade, and inspect the final asset manually; reject glossy synthetic output rather than treating generation as a finished result.
 - Treat Penelope, Argos, Athena, the bow and axes, the olive bed, Achilles, and Agamemnon as narrative evidence, never mascots or decorative icon inventory.
 
 ## Component grammar
@@ -77,7 +77,7 @@ Keep every other state static. Use native CSS, DOM, and SVG; do not add an anima
 - [ ] Survivor's guilt is labeled as a modern lens; grief, responsibility, pain, anger, and revenge remain morally legible.
 - [ ] Penelope, Argos, Athena, bow/axes, olive bed, Achilles, and Agamemnon serve the narrative.
 - [ ] Every historical or visual claim stays inside its declared source layer.
-- [ ] Cold-black, ash, bone, oxidized-green, muted-brick, type, collage, and sharp component rules are applied consistently.
+- [ ] Cold-black, ash, bone, oxidized-green, muted-brick, type, photographic tableaux, and sharp component rules are applied consistently.
 - [ ] Exactly two meaningful motion moments exist and both have complete reduced-motion states.
 - [ ] Mobile order, keyboard use, focus, contrast, alt text, responsive media, and layout stability pass review.
 - [ ] No refusal-rule violation or copied asset remains.

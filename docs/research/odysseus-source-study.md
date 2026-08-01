@@ -137,15 +137,15 @@ These are visual references, not a blanket license. The Met records below identi
 
 For implementation, prefer an original illustration system derived from these compositional principles. If a real object photograph is needed, start with Met Open Access and preserve the object's credit/source record.
 
-## Implemented collage provenance
+## Implemented narrative asset provenance
 
-The three v1.1 WebPs are authored editorial composites, not generated concept paintings. They were assembled with ImageMagick from six Met Open Access photographs whose collection records explicitly mark the images Public Domain. The complete machine-readable record, including accession numbers, source-image URLs, credit lines, source layers, and per-collage roles, lives at `public/assets/odysseus-sources.json`.
+The three current v1.1 WebPs are AI-assisted original narrative tableaux, not museum collages or film stills. Each was generated from a scene-specific art-direction brief grounded in the source study above, visually inspected, corrected when an ambiguous artifact appeared, and converted to a compact sRGB WebP with ImageMagick. The generated pixels do not copy the researched museum photographs; those objects remain visual and material-culture research only. No actor likeness, trailer frame, or production asset is embedded. The machine-readable production record lives at `public/assets/odysseus-sources.json`.
 
-| Final asset | Exact source objects | Use and boundary |
+| Final asset | Narrative construction | Boundary |
 |---|---|---|
-| `odysseus-hero.webp` | [Mycenaean octopus stirrup jar, 53.11.6](https://www.metmuseum.org/art/collection/search/254779); [Cypriot ship model, 74.51.1752](https://www.metmuseum.org/art/collection/search/241307) | The jar supplies era-near Bronze Age marine material; the later Cypriot ship remains a reception-layer silhouette. |
-| `odysseus-underworld.webp` | [Attic white-ground funerary lekythos, 06.1021.294](https://www.metmuseum.org/art/collection/search/247458) | A later Greek funerary object repeated as fading memory, not a literal image of Homer's underworld. |
-| `odysseus-homecoming.webp` | [Melian Odysseus/Penelope plaque, 30.11.9](https://www.metmuseum.org/art/collection/search/253053); [Attic Odysseus archer jug, 24.97.24](https://www.metmuseum.org/art/collection/search/251485); [Attic Athena-owl cup, 41.162.100](https://www.metmuseum.org/art/collection/search/254272) | Three later Greek reception objects assembled as a recognition sequence; none is claimed as Bronze Age documentation. |
+| `odysseus-hero.webp` | A human-scale departure from Troy: exhausted crew, tar-black hull, wet rope, torn wool, distant fire, and a text-safe field of darkness. | Original historical tableau; Troy and Odysseus are interpretive reconstructions, not archaeological documentation or a copied film design. |
+| `odysseus-underworld.webp` | The Book 11 blood rite staged in a damp sea cave with a trench, offerings, sword, and small gauze-like shades. | Original historical tableau; no Christian hell imagery, giant ghost portraits, graphic gore, or literal claim about an ancient visual canon. |
+| `odysseus-homecoming.webp` | Argos recognizes the disguised Odysseus at the threshold; bow, axe heads, loom, and owl remain quiet second-read evidence. | Original historical tableau; later visual traditions inform the symbols, while the household scene itself is a modern composition. |
 
 ## Universal/Nolan film layer — official material only
 

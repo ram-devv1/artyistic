@@ -77,9 +77,9 @@ test("the homepage source declares the complete Long Return contract", () => {
   assert.match(page, /className=["'][^"']*\bjourney-meta\b/i);
 
   const images = [
-    ["/assets/odysseus-hero.webp", "Storm-dark Aegean voyage collage tracing the long return to Ithaca"],
-    ["/assets/odysseus-underworld.webp", "Underworld remembrance collage of sacrifice, memory, and counsel"],
-    ["/assets/odysseus-homecoming.webp", "Archival collage of Odysseus returning to Penelope with the archer and Athena's owl"],
+    ["/assets/odysseus-hero.webp", "Odysseus hesitates beside his war-worn ship as Troy burns across the dark water"],
+    ["/assets/odysseus-underworld.webp", "Odysseus kneels beside the blood offering while the shades gather in a sea cave"],
+    ["/assets/odysseus-homecoming.webp", "The old dog Argos recognizes a disguised Odysseus at the threshold of his Ithacan house"],
   ];
 
   for (const [src, alt] of images) {
@@ -178,24 +178,21 @@ test("the release package exposes the production build", () => {
   assert.equal(packageJson.scripts.build, "next build");
 });
 
-test("the collage asset manifest preserves exact public-domain provenance", async () => {
+test("the narrative asset manifest records the production boundary", async () => {
   const manifest = JSON.parse(
     await readFile(new URL("../public/assets/odysseus-sources.json", import.meta.url), "utf8"),
   );
 
-  assert.equal(manifest.license, "Creative Commons Zero (CC0)");
-  assert.equal(manifest.providerPolicy, "https://www.metmuseum.org/hubs/open-access");
-  assert.equal(manifest.assets.length, 3, "expected one provenance record per collage");
+  assert.equal(manifest.schemaVersion, 2);
+  assert.equal(manifest.provenance.mode, "AI-assisted original generation");
+  assert.equal(manifest.provenance.thirdPartyVisualPixels, false);
+  assert.equal(manifest.provenance.filmAssets, false);
+  assert.equal(manifest.assets.length, 3, "expected one production record per narrative tableau");
 
-  const sources = manifest.assets.flatMap((asset) => asset.sources);
-  const expectedObjectIds = [241307, 247458, 251485, 253053, 254272, 254779];
-  assert.deepEqual(sources.map((source) => source.objectId).sort(), expectedObjectIds);
-
-  for (const source of sources) {
-    assert.equal(source.institution, "The Metropolitan Museum of Art");
-    assert.equal(source.publicDomain, true);
-    assert.equal(source.sourcePage, `https://www.metmuseum.org/art/collection/search/${source.objectId}`);
-    assert.match(source.sourceImage, /^https:\/\/images\.metmuseum\.org\/CRDImages\/gr\/original\/.+\.jpg$/i);
-    assert.ok(source.accessionNumber && source.creditLine, `missing credit record for Met ${source.objectId}`);
+  for (const asset of manifest.assets) {
+    assert.match(asset.asset, /^\/assets\/odysseus-(?:hero|underworld|homecoming)\.webp$/);
+    assert.ok(asset.storyBeat && asset.artDirection && asset.historicalBoundary, `incomplete record for ${asset.asset}`);
+    assert.ok(asset.output.width > 0 && asset.output.height > 0);
+    assert.equal(asset.output.format, "WebP");
   }
 });

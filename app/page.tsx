@@ -23,7 +23,7 @@ export default function Home() {
         <section id="journey" aria-labelledby="journey-title" className="relative isolate min-h-[calc(100svh-2.75rem)] overflow-hidden border-b border-[#D8CCB4]/10">
           <Image
             src="/assets/odysseus-hero.webp"
-            alt="Storm-dark Aegean voyage collage tracing the long return to Ithaca"
+            alt="Odysseus hesitates beside his war-worn ship as Troy burns across the dark water"
             fill
             priority
             sizes="100vw"
@@ -92,7 +92,7 @@ export default function Home() {
             <div className="relative min-h-[32rem] overflow-hidden lg:min-h-[48rem]">
               <Image
                 src="/assets/odysseus-underworld.webp"
-                alt="Underworld remembrance collage of sacrifice, memory, and counsel"
+                alt="Odysseus kneels beside the blood offering while the shades gather in a sea cave"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover"
@@ -119,7 +119,7 @@ export default function Home() {
               <div className="relative min-h-[30rem] overflow-hidden border border-[#D8CCB4]/10">
                 <Image
                   src="/assets/odysseus-homecoming.webp"
-                  alt="Archival collage of Odysseus returning to Penelope with the archer and Athena's owl"
+                  alt="The old dog Argos recognizes a disguised Odysseus at the threshold of his Ithacan house"
                   fill
                   sizes="(min-width: 1024px) 58vw, 100vw"
                   className="object-cover"
