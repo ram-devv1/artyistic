@@ -1,0 +1,4 @@
+interface:
+  display_name: "Artystic"
+  short_description: "Editorial web design with an Odysseus theme"
+  default_prompt: "Use $artystic with the artystic odysseus theme to critique and rebuild this page as an authored editorial experience."

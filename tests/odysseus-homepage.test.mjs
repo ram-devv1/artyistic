@@ -23,6 +23,30 @@ function extractBlock(source, marker) {
   assert.fail(`unclosed block for ${marker}`);
 }
 
+test("Artystic routes the exact Odysseus theme to its complete contract", async () => {
+  const skill = await readFile(new URL("../skills/artystic/SKILL.md", import.meta.url), "utf8");
+  assert.match(skill, /`artystic odysseus`[^\n]*`references\/odysseus\.md`/);
+  assert.match(skill, /read[^\n]*in full/i);
+
+  const reference = await readFile(new URL("../skills/artystic/references/odysseus.md", import.meta.url), "utf8");
+
+  for (const emotion of ["survivor's guilt", "revenge", "responsibility", "grief", "pain", "anger"]) {
+    assert.match(reference, new RegExp(emotion.replace("'", "['’]"), "i"), `missing ${emotion}`);
+  }
+
+  for (const sourceLayer of [
+    "Bronze Age material",
+    "Homeric narrative",
+    "later Greek visual reception",
+    "original modern composition",
+  ]) {
+    assert.match(reference, new RegExp(sourceLayer, "i"), `missing source boundary: ${sourceLayer}`);
+  }
+
+  assert.match(reference, /modern interpretive lens[^\n]*never[^\n]*Homeric diagnosis/i);
+  assert.match(reference, /refuse[^\n]*(?:copied film assets|film assets[^\n]*copied)/i);
+});
+
 test("the homepage source declares the complete Long Return contract", () => {
   assert.match(page, /The Long Return/);
   assert.equal(page.match(/<section\b/g)?.length, 6, "expected six narrative acts");
