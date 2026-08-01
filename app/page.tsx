@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { animate, motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
 import type { MotionStyle } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
@@ -38,12 +38,45 @@ function RecognitionIndex({
   return <motion.span aria-hidden="true" className="recognition-index">{display}</motion.span>;
 }
 
+function StatNumber({
+  active,
+  reducedMotion,
+  value,
+}: {
+  active: boolean;
+  reducedMotion: boolean | null;
+  value: number;
+}) {
+  const count = useMotionValue(0);
+  const display = useTransform(count, (latest) => String(Math.round(latest)));
+
+  useEffect(() => {
+    if (reducedMotion) {
+      count.set(value);
+      return;
+    }
+    if (!active) return;
+
+    const playback = animate(count, value, { duration: 0.9, ease: [0.22, 1, 0.36, 1] });
+    return () => playback.stop();
+  }, [active, count, reducedMotion, value]);
+
+  return (
+    <>
+      <motion.span aria-hidden="true" className="stat__count">{display}</motion.span>
+      <span aria-hidden="true" className="stat__final">{value}</span>
+    </>
+  );
+}
+
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
   const memoryRef = useRef<HTMLElement>(null);
   const recognitionRef = useRef<HTMLElement>(null);
+  const statsRef = useRef<HTMLUListElement>(null);
   const [recognitionActive, setRecognitionActive] = useState(false);
   const reducedMotion = useReducedMotion();
+  const statsInView = useInView(statsRef, { once: true, amount: 0.6 });
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -265,44 +298,79 @@ export default function Home() {
         </section>
 
         <section id="invoke" aria-labelledby="invoke-title" className="px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <motion.span
+            aria-hidden="true"
+            className="bow-string-shimmer"
+            initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: [0, 1, 1, 0], y: [0, 112, 224] }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 2.4, delay: 0.45, ease: "easeInOut" }}
+          />
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
               <div>
                 <h2 id="invoke-title" className="font-[var(--font-serif)] text-5xl leading-none tracking-[-0.045em] sm:text-7xl">String the bow. End the cycle.</h2>
                 <p className="mt-7 max-w-xl text-lg leading-8 text-[#D8CCB4]/70">The bow restores Odysseus’s name through violence. The olive-root bed restores the marriage through memory. Athena must still stop revenge from repeating itself.</p>
               </div>
-              <div className="invoke-command border-y border-[#D8CCB4]/20 py-8">
+              <motion.div
+                className="invoke-command border-y border-[#D8CCB4]/20 py-8"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={revealViewport}
+                transition={{ duration: 0.56, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.24em] text-[#C8B16A]">Artystic theme command</p>
-                <pre className="mt-5 font-[var(--font-mono)] text-2xl text-[#D8CCB4] sm:text-4xl"><code>npx artystic</code></pre>
+                <pre className="mt-5 font-[var(--font-mono)] text-2xl text-[#D8CCB4] sm:text-4xl"><code>npx artystic<span aria-hidden="true" className="caret" /></code></pre>
                 <div className="mt-7"><CopyCommand command="npx artystic" /></div>
                 <p className="mt-6 max-w-xl text-sm leading-7 text-[#D8CCB4]/58">Invoke <code className="text-[#C8B16A]">artystic odysseus</code> for the narrative, palette, typography, imagery, motion budget, and source boundaries of The Long Return.</p>
-              </div>
+              </motion.div>
             </div>
-            <div className="axe-register" aria-hidden="true">
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-              <span className="axe-aperture" />
-            </div>
+            <motion.ul
+              ref={statsRef}
+              className="stats-row"
+              initial="hidden"
+              whileInView="visible"
+              viewport={revealViewport}
+              variants={{ visible: { transition: { staggerChildren: 0.07 } } }}
+            >
+              <motion.li className="stat" aria-label="20 years absent" variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}><StatNumber active={statsInView} reducedMotion={reducedMotion} value={20} /><span aria-hidden="true">years absent</span></motion.li>
+              <motion.li className="stat" aria-label="12 axes" variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}><StatNumber active={statsInView} reducedMotion={reducedMotion} value={12} /><span aria-hidden="true">axes</span></motion.li>
+              <motion.li className="stat" aria-label="6 taken" variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}><StatNumber active={statsInView} reducedMotion={reducedMotion} value={6} /><span aria-hidden="true">taken</span></motion.li>
+              <motion.li className="stat" aria-label="1 ship returns" variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } }}><StatNumber active={statsInView} reducedMotion={reducedMotion} value={1} /><span aria-hidden="true">ship returns</span></motion.li>
+            </motion.ul>
+            <motion.div
+              className="axe-register"
+              aria-hidden="true"
+              initial="hidden"
+              whileInView="visible"
+              viewport={revealViewport}
+              variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+            >
+              <motion.span className="axe-register__rule" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={revealViewport} transition={{ duration: 0.56 }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+              <motion.span className="axe-aperture" variants={{ hidden: { opacity: 0, y: -24 }, visible: { opacity: 1, y: 0 } }} />
+            </motion.div>
           </div>
         </section>
       </main>
 
       <footer className="border-t border-[#D8CCB4]/10 bg-[#090D0F] px-4 py-10 text-[#D8CCB4] sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-4 lg:grid-cols-[0.24fr_0.76fr]">
-          <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.24em] text-[#C8B16A]">Source boundary</p>
+        <motion.div className="footer-source mx-auto grid max-w-7xl gap-4 lg:grid-cols-[0.24fr_0.76fr]" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={revealViewport} transition={{ duration: 0.56 }}>
+          <p className="font-[var(--font-mono)] text-xs uppercase tracking-[0.24em] text-[#C8B16A]"><a href="/assets/odysseus-sources.json">Source boundary</a></p>
           <p className="max-w-4xl text-sm leading-7 text-[#D8CCB4]/58">
             Homeric material grounds the journey, losses, and recognitions. Later visual reception supplies distinct vase and object traditions; it is not Bronze Age documentary evidence. The survivor’s-guilt frame, cinematic scale, and this design are an original modern interpretation, not a diagnosis made by Homer or an archaeological reconstruction.
           </p>
-        </div>
+        </motion.div>
       </footer>
     </>
   );

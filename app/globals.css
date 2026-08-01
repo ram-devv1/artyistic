@@ -224,6 +224,10 @@ p {
   50% { opacity: 0; }
 }
 
+@keyframes copy-pop {
+  50% { transform: scale(1.18); }
+}
+
 @keyframes arrow-slide {
   50% { transform: translate3d(0.25rem, 0, 0); }
 }
@@ -805,11 +809,24 @@ footer p {
 }
 
 #invoke pre {
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   color: var(--bone) !important;
 }
 
 #invoke code {
   color: var(--glint) !important;
+}
+
+.caret {
+  display: inline-block;
+  width: 1px;
+  height: 0.88em;
+  margin-left: 0.18em;
+  background: var(--brick);
+  animation: caret-blink 1s steps(1, end) infinite;
+  vertical-align: -0.04em;
 }
 
 .bow-string,
@@ -835,6 +852,18 @@ footer p {
   opacity: 0.72;
 }
 
+.bow-string-shimmer {
+  position: absolute;
+  z-index: 0;
+  top: calc(50% - 14.5rem);
+  right: clamp(2rem, 6vw, 7rem);
+  width: 3px;
+  height: 4.5rem;
+  background: linear-gradient(180deg, transparent, var(--glint), transparent);
+  filter: drop-shadow(0 0 0.35rem var(--glint));
+  pointer-events: none;
+}
+
 #invoke::after {
   content: "";
   position: absolute;
@@ -856,14 +885,14 @@ footer p {
   margin-top: clamp(5rem, 9vw, 8rem);
 }
 
-.axe-register::before {
-  content: "";
+.axe-register__rule {
   position: absolute;
   top: 0.95rem;
   right: 0;
   left: 0;
   height: 1px;
   background: var(--brick);
+  transform-origin: left center;
 }
 
 .axe-aperture {
@@ -885,7 +914,47 @@ footer p {
   background: var(--hull);
 }
 
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: clamp(4rem, 7vw, 6rem) 0 0;
+  padding: 0;
+  border-block: 1px solid var(--rule);
+  list-style: none;
+}
+
+.stat {
+  min-width: 0;
+  padding: 1.35rem 1rem;
+  border-right: 1px solid var(--rule);
+  color: var(--ash);
+  font-family: var(--font-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.stat:last-child {
+  border-right: 0;
+}
+
+.stat__count,
+.stat__final {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--bone);
+  font-family: var(--font-serif), serif;
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+}
+
+.stat__final {
+  display: none;
+}
+
 .copy-button {
+  position: relative;
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -898,12 +967,39 @@ footer p {
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
+  transition: color var(--dur-1) ease-out;
+}
+
+.copy-button::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--bone);
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  transition: clip-path var(--dur-2) var(--ease-enter);
 }
 
 .copy-button:hover {
-  border-color: var(--bone);
-  background: var(--bone);
-  color: var(--hull);
+  color: var(--bone);
+}
+
+.copy-button:hover::after,
+.copy-button:focus-visible::after {
+  clip-path: inset(0);
+}
+
+.copy-button[data-copied="true"] {
+  border-color: var(--brick);
+  color: var(--brick);
+}
+
+.copy-button[data-copied="true"]::after {
+  border-color: var(--brick);
+}
+
+.copy-button[data-copied="true"] svg {
+  animation: copy-pop var(--dur-1) var(--ease-enter);
 }
 
 .copy-button__text {
@@ -928,6 +1024,15 @@ footer {
 footer > div > p:first-child,
 #invoke div > p:first-child {
   color: var(--oxidized) !important;
+}
+
+footer a {
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+
+footer a:hover {
+  text-decoration-line: underline;
 }
 
 @media (max-width: 767px) {
@@ -1018,6 +1123,18 @@ footer > div > p:first-child,
     width: 100%;
     margin-top: 4rem;
   }
+
+  .stats-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .stat:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--rule);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1102,6 +1219,37 @@ footer > div > p:first-child,
   .cunning-card h3::after {
     transform: scaleX(1);
     transition: none;
+  }
+
+  .invoke-command,
+  .axe-aperture,
+  .axe-register__rule,
+  .footer-source {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none;
+  }
+
+  .bow-string-shimmer {
+    opacity: 0 !important;
+    transform: none !important;
+  }
+
+  .caret,
+  .copy-button[data-copied="true"] svg {
+    animation: none;
+  }
+
+  .copy-button::after {
+    transition: none;
+  }
+
+  .stat__count {
+    display: none;
+  }
+
+  .stat__final {
+    display: block;
   }
 
   .voyage-line,

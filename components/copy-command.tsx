@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardDocumentIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, ClipboardDocumentIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 
 export function CopyCommand({ command }: { command: string }) {
@@ -17,8 +17,9 @@ export function CopyCommand({ command }: { command: string }) {
       type="button"
       onClick={copy}
       className="copy-button"
+      data-copied={copied}
     >
-      <ClipboardDocumentIcon aria-hidden="true" className="h-4 w-4" />
+      {copied ? <CheckIcon aria-hidden="true" className="h-4 w-4" /> : <ClipboardDocumentIcon aria-hidden="true" className="h-4 w-4" />}
       <span className="copy-button__text" aria-live="polite" aria-atomic="true">
         <span className="copy-button__sizer">Copy command</span>
         <span>{copied ? "Copied" : "Copy command"}</span>

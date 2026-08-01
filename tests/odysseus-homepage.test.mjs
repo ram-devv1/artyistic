@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+const copyCommand = await readFile(new URL("../components/copy-command.tsx", import.meta.url), "utf8");
 const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 const stylesheet = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
@@ -121,7 +122,7 @@ test("the hero has scroll motion, masked title lines, and reduced-motion final s
   const journey = page.match(/<section\b[^>]*id=["']journey["'][\s\S]*?<\/section>/)?.[0] ?? "";
 
   assert.match(page, /^"use client";/);
-  assert.match(page, /import \{ animate, motion, useMotionValue, useReducedMotion, useScroll, useTransform \} from ["']motion\/react["']/);
+  assert.match(page, /import \{ animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useTransform \} from ["']motion\/react["']/);
   assert.match(page, /const heroRef = useRef<HTMLElement>\(null\)/);
   assert.match(page, /useScroll\(\{\s*target: heroRef,\s*offset: \[["']start start["'], ["']end start["']\],?\s*\}\)/);
   assert.match(page, /useTransform\(scrollYProgress, \[0, 1\], \[["']0%["'], ["']12%["']\]\)/);
@@ -176,6 +177,79 @@ test("page-level motion is hydration-safe and static for reduced motion", async 
   assert.match(reducedMotionFor(".hero-plate-wrap"), /\btransform\s*:\s*none\s*!important\b/i, "reduced motion must keep hero art passive");
   assert.match(reducedMotionFor(".hero-fade"), /--hero-opacity\s*:\s*1\s*!important\b/i, "reduced motion must pin the hero fade to full opacity");
   assert.match(reducedMotionFor(".hero-word__line"), /\btransform\s*:\s*none\s*!important\b/i, "reduced motion must reveal every title line");
+});
+
+test("the invocation climaxes with hydration-safe ambient life", () => {
+  const invoke = page.match(/<section\b[^>]*id=["']invoke["'][\s\S]*?<\/section>/)?.[0] ?? "";
+  const footer = page.match(/<footer\b[\s\S]*?<\/footer>/)?.[0] ?? "";
+
+  assert.match(page, /import \{ animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useTransform \} from ["']motion\/react["']/);
+  assert.match(page, /const statsRef = useRef<HTMLUListElement>\(null\)/);
+  assert.match(page, /const statsInView = useInView\(statsRef, \{ once: true, amount: 0\.6 \}\)/);
+  assert.match(page, /animate\(count, value, \{ duration: 0\.9,/);
+  assert.match(page, /if \(reducedMotion\) \{\s*count\.set\(value\);\s*return;/);
+  assert.doesNotMatch(invoke, /reducedMotion\s*\?/, "invoke Motion props must match between SSR and the first client render");
+
+  for (const label of ["20 years absent", "12 axes", "6 taken", "1 ship returns"]) {
+    assert.match(invoke, new RegExp(`aria-label=["']${label}["']`), `missing stat: ${label}`);
+  }
+  assert.equal(invoke.match(/className=["']stat["']/g)?.length, 4, "expected four count-up stats");
+  assert.equal(invoke.match(/<StatNumber\b/g)?.length, 4, "every stat must count with the shared Motion value");
+  assert.match(invoke, /<motion\.ul\b[^>]*ref=\{statsRef\}/);
+  assert.match(page, /className=["']stat__count["']/);
+  assert.match(page, /className=["']stat__final["']/);
+
+  assert.match(invoke, /className=["']bow-string-shimmer["']/);
+  assert.match(invoke, /whileInView=\{\{ opacity: \[0, 1, 1, 0\], y: \[0, 112, 224\] \}\}/);
+  assert.match(invoke, /transition=\{\{ duration: 2\.4,/);
+  assert.match(invoke, /viewport=\{\{ once: true, amount: 0\.2 \}\}/);
+
+  assert.match(invoke, /variants=\{\{ visible: \{ transition: \{ staggerChildren: 0\.06 \} \} \}\}/);
+  assert.equal(invoke.match(/<motion\.span className=["']axe-aperture["']/g)?.length, 12, "all twelve apertures must stagger");
+  assert.match(invoke, /className=["']axe-register__rule["']/);
+  assert.match(invoke, /initial=\{\{ scaleX: 0 \}\}/);
+  assert.match(invoke, /whileInView=\{\{ scaleX: 1 \}\}/);
+
+  assert.match(invoke, /<motion\.div\b[^>]*className=["'][^"']*\binvoke-command\b/);
+  assert.match(invoke, /<code>npx artystic<span aria-hidden=["']true["'] className=["']caret["'] \/><\/code>/);
+  assert.doesNotMatch(invoke, /<pre[^>]*\boverflow-x-auto\b/i);
+  assert.match(stylesheet, /#invoke pre\s*\{[^}]*white-space\s*:\s*pre-wrap[^}]*overflow-wrap\s*:\s*anywhere/s);
+
+  assert.match(copyCommand, /import \{ CheckIcon, ClipboardDocumentIcon \}/);
+  assert.match(copyCommand, /data-copied=\{copied\}/);
+  assert.match(copyCommand, /copied \? <CheckIcon/);
+  assert.match(stylesheet, /\.copy-button\[data-copied=["']true["']\]\s*\{[^}]*color\s*:\s*var\(--brick\)/s);
+  assert.match(stylesheet, /\.copy-button\[data-copied=["']true["']\]\s+svg\s*\{[^}]*animation\s*:\s*copy-pop/s);
+  assert.match(stylesheet, /\.copy-button:hover::after\s*,\s*\.copy-button:focus-visible::after\s*\{[^}]*clip-path\s*:\s*inset\(0\)/s);
+
+  assert.match(footer, /<motion\.div\b[^>]*className=["'][^"']*\bfooter-source\b/);
+  assert.match(footer, /href=["']\/assets\/odysseus-sources\.json["']/);
+  for (const phrase of ["Homeric material", "Later visual reception", "original modern interpretation"]) {
+    assert.match(footer, new RegExp(phrase, "i"), `missing footer source phrase: ${phrase}`);
+  }
+  assert.match(stylesheet, /footer a:hover\s*\{[^}]*text-decoration-line\s*:\s*underline/s);
+
+  const reducedMotion = extractBlock(stylesheet, "@media (prefers-reduced-motion: reduce)");
+  const reducedMotionFor = (target) => [...reducedMotion.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, selectors]) => selectors.split(",").map((selector) => selector.trim()).includes(target))
+    .map(([, , declarations]) => declarations)
+    .join("\n");
+
+  for (const target of [".invoke-command", ".axe-aperture", ".axe-register__rule", ".footer-source"]) {
+    assert.match(reducedMotionFor(target), /\btransform\s*:\s*none\s*!important\b/i, `${target} must override inline transforms`);
+  }
+  for (const target of [".invoke-command", ".axe-aperture", ".footer-source"]) {
+    assert.match(reducedMotionFor(target), /\bopacity\s*:\s*1\s*!important\b/i, `${target} must remain visible`);
+  }
+  assert.match(reducedMotionFor(".bow-string-shimmer"), /\bopacity\s*:\s*0\s*!important\b/i);
+  assert.match(reducedMotionFor(".caret"), /\banimation\s*:\s*none\b/i);
+  assert.match(reducedMotionFor(".stat__count"), /\bdisplay\s*:\s*none\b/i);
+  assert.match(reducedMotionFor(".stat__final"), /\bdisplay\s*:\s*block\b/i);
+
+  const baseStyles = stylesheet.slice(0, stylesheet.indexOf("@media (prefers-reduced-motion: reduce)"));
+  for (const selector of ["bow-string-shimmer", "axe-aperture", "axe-register__rule", "invoke-command", "footer-source"]) {
+    assert.doesNotMatch(baseStyles, new RegExp(`\\.${selector}\\s*\\{[^}]*\\bwill-change\\s*:`, "s"), `${selector} must not keep a permanent will-change hint`);
+  }
 });
 
 test("the middle acts have distinct reduced-motion-safe choreography", () => {
